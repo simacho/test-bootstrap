@@ -16,7 +16,7 @@ export class MyPage extends Component {
                     Profile <Badge variant="light">9</Badge>
                     <span className="sr-only">unread messages</span>
                 </Button>
-                <Form>
+                <Form onSubmit={this.props.onSubmit}>
                     <Form.Group controlId="formBasicEmail">
                         <Form.Label>Eメールアドレス</Form.Label>
                         <Form.Control type="email" placeholder="Eメールアドレスを入力してください" onChange={this.props.onTextChange} />
@@ -35,7 +35,7 @@ export class MyPage extends Component {
                     <Form.Group controlId="formBasicChecbox">
                         <Form.Check type="checkbox" label="Check me out" />
                     </Form.Group>
-                     <Button variant="primary" type="submit">
+                     <Button variant="primary" type="submit" >
                         Submit
                     </Button>
                 </Form>

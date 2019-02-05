@@ -23,7 +23,11 @@ class App extends Component {
                 <div>
                     <Route exact path="/" component={Home} />
                     <Route path="/mypage" 
-                        render={props => <MyPage onTextChange={this.onTextChange} onButtonClick={this.onButtonClick} />} />
+                        render={props => <MyPage onTextChange={this.onTextChange} 
+                            onButtonClick={this.onButtonClick}
+                            onSubmit={this.onSubmit}
+                                />}
+                    />
                 </div>
             </BrowserRouter>
         );
@@ -35,6 +39,9 @@ class App extends Component {
 
     onButtonClick(){
         console.log("onButtonClick!!!")
+    }
+    onSubmit(){
+        console.log("onSubmit!!!")
     }
 
 }
