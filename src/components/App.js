@@ -34,19 +34,31 @@ class App extends Component {
     }
 
     onTextChange(e) {
-        console.log("onTextChange!!!")
+        if (e.target.name === "email" ){
+            this.setState({
+                "email": e.target.value,
+            });
+        } else if (e.target.name === "password"){
+            this.setState({
+                "password": e.target.value,
+            });
+        } else if (e.target.name === "name"){
+            this.setState({
+                "name": e.target.value,
+            });
+        }
+        console.log(this.state)
     }
 
     onButtonClick(){
-        console.log("onButtonClick!!!")
     }
     onSubmit(){
-        console.log("onSubmit!!!")
         messagesRef.push({
             "name" : this.state.name,
             "email" : this.state.email,
             "password" : this.state.password,
         })
+        console.log(this.state)
     }
 }
 
