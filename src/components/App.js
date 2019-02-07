@@ -22,7 +22,7 @@ class App extends Component {
             <BrowserRouter>
                 <div>
                     <Route exact path="/" component={Home} />
-                    <Route path="/mypage" 
+                    <Route path="/mypage/:id" 
                         render={props => <MyPage onTextChange={this.onTextChange} 
                             onButtonClick={this.onButtonClick}
                             onSubmit={this.onSubmit}
@@ -42,8 +42,12 @@ class App extends Component {
     }
     onSubmit(){
         console.log("onSubmit!!!")
+        messagesRef.push({
+            "name" : this.state.name,
+            "email" : this.state.email,
+            "password" : this.state.password,
+        })
     }
-
 }
 
 const Home = () => (
@@ -51,7 +55,6 @@ const Home = () => (
         hoge
     </div>
 )
-
 
 export default App;
 
