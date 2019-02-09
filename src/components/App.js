@@ -5,11 +5,12 @@ import { MyPage } from './MyPage';
 
 const messagesRef = firebaseDb.ref('messages')
   
-class App extends Component {
+class App extends React.Component {
     constructor(props) {
         super(props);
         this.onTextChange = this.onTextChange.bind(this)
         this.onButtonClick = this.onButtonClick.bind(this)
+        this.onSubmit = this.onSubmit.bind(this)
         this.state = {
             name: "",
             email: "",
@@ -52,6 +53,7 @@ class App extends Component {
 
     onButtonClick(){
     }
+
     onSubmit(){
         messagesRef.push({
             "name" : this.state.name,

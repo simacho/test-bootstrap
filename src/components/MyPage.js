@@ -6,17 +6,7 @@ export class MyPage extends Component {
     render() {
         return (
             <div>
-                <Button variant="flag" size="xxl">
-                    flagbutton
-                </Button>
-                <Alert variant="primary">
-                    This is a hoge alert
-                </Alert>
-                <Button variant="primary">
-                    Profile <Badge variant="light">9</Badge>
-                    <span className="sr-only">unread messages</span>
-                </Button>
-                <Form onSubmit={this.props.onSubmit}>
+               <Form onSubmit={this.props.onSubmit}>
                     <Form.Group controlId="formBasicEmail">
                         <Form.Label>Eメールアドレス</Form.Label>
                         <Form.Control name="email" type="email" placeholder="Eメールアドレスを入力してください" onChange={this.props.onTextChange} />
