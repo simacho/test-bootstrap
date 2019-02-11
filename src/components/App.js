@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
 import { firebaseDb } from '../firebase/index.js'
+import firebase from 'firebase';
+import firebaseui from 'firebaseui';
 import { BrowserRouter, Route, Link } from 'react-router-dom'
 import { MyPage } from './MyPage';
+import { LoginPage } from './LoginPage';
 
 const messagesRef = firebaseDb.ref('messages')
-  
+
+
 class App extends React.Component {
     constructor(props) {
         super(props);
@@ -18,20 +22,25 @@ class App extends React.Component {
         }
     }
 
-    render() {
-        return (
-            <BrowserRouter>
+
+
+
+    render() { return (
+        <BrowserRouter>
+            <Switch>
                 <div>
                     <Route exact path="/" component={Home} />
+                    <Route exact path="/login" component={LoginPage} />
                     <Route path="/mypage/:id" 
                         render={props => <MyPage onTextChange={this.onTextChange} 
                             onButtonClick={this.onButtonClick}
                             onSubmit={this.onSubmit}
-                                />}
+                        />}
                     />
                 </div>
-            </BrowserRouter>
-        );
+            </Switch>
+        </BrowserRouter>
+    );
     }
 
     onTextChange(e) {
