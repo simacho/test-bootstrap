@@ -10,6 +10,14 @@ const messagesRef = firebaseDb.ref('messages')
 
 
 class App extends React.Component {
+    render(){
+        return (
+            <PostList />
+        );
+    }
+}
+
+class PostList extends React.Component {
     constructor(props) {
         super(props);
         this.onTextChange = this.onTextChange.bind(this)
@@ -22,25 +30,35 @@ class App extends React.Component {
         }
     }
 
+    componentWillMount() {
+        this.checkAuthentication(this.props);
+    }
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.location !== this.props.location) {
+            this.checkAuthentication(nextProps);
+        }
+    }
+    checkAuthentication(params) {
+        //        const { history } = params;
+        //        checkCredentials()
+        //   .catch(e => history.replace({ pathname: '/login' }));
+    }
 
-
-
-    render() { return (
-        <BrowserRouter>
-            <Switch>
-                <div>
-                    <Route exact path="/" component={Home} />
-                    <Route exact path="/login" component={LoginPage} />
-                    <Route path="/mypage/:id" 
-                        render={props => <MyPage onTextChange={this.onTextChange} 
-                            onButtonClick={this.onButtonClick}
-                            onSubmit={this.onSubmit}
-                        />}
-                    />
-                </div>
-            </Switch>
+    render() {
+        return(
+            <BrowserRouter>
+            <div>
+                <Route exact path="/" component={Home} />
+                <Route exact path="/login" component={LoginPage} />
+                <Route path="/mypage/:id" 
+                    render={props => <MyPage onTextChange={this.onTextChange} 
+                        onButtonClick={this.onButtonClick}
+                        onSubmit={this.onSubmit}
+                    />}
+                />
+            </div>
         </BrowserRouter>
-    );
+        );
     }
 
     onTextChange(e) {
@@ -72,6 +90,7 @@ class App extends React.Component {
         console.log(this.state)
     }
 }
+
 
 const Home = () => (
     <div>
