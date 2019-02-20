@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { firebaseDb } from '../firebase/index.js'
 import firebase from 'firebase';
 import firebaseui from 'firebaseui';
-import { BrowserRouter, Route, Link } from 'react-router-dom'
+import { BrowserRouter, Route, Link, Redirect } from 'react-router-dom'
 import { MyPage } from './MyPage';
 import { LoginPage } from './LoginPage';
 
@@ -16,6 +16,17 @@ class App extends React.Component {
         );
     }
 }
+
+const PrivateRoute = ({ component: Component, ...rest}) => (
+    <Route {...rest}
+        render={props => fakeAuth.isAuthenticated ? ( <Component {...props} /> ) : (
+            <Redirect to={{ 
+                pathname: "/login", state: { from: props.location }
+            }} />
+        )
+        }
+    />
+);
 
 class PostList extends React.Component {
     constructor(props) {
@@ -38,17 +49,18 @@ class PostList extends React.Component {
             this.checkAuthentication(nextProps);
         }
     }
-    checkAuthentication(params) {
-        //        const { history } = params;
-        //        checkCredentials()
-        //   .catch(e => history.replace({ pathname: '/login' }));
+
+    loggedIn() {
+        false
     }
 
     render() {
         return(
             <BrowserRouter>
             <div>
-                <Route exact path="/" component={Home} />
+                <Route exact path="/" render={()=> (
+                    this.loggedIn() ? ( <Redirect to="/dashboard"/> ) : ( <Home/> )
+                )}/>
                 <Route exact path="/login" component={LoginPage} />
                 <Route path="/mypage/:id" 
                     render={props => <MyPage onTextChange={this.onTextChange} 
