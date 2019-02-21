@@ -17,6 +17,7 @@ class App extends React.Component {
     }
 }
 
+/*
 const PrivateRoute = ({ component: Component, ...rest}) => (
     <Route {...rest}
         render={props => fakeAuth.isAuthenticated ? ( <Component {...props} /> ) : (
@@ -27,6 +28,10 @@ const PrivateRoute = ({ component: Component, ...rest}) => (
         }
     />
 );
+*/
+
+
+
 
 class PostList extends React.Component {
     constructor(props) {
@@ -41,6 +46,7 @@ class PostList extends React.Component {
         }
     }
 
+/*
     componentWillMount() {
         this.checkAuthentication(this.props);
     }
@@ -49,9 +55,10 @@ class PostList extends React.Component {
             this.checkAuthentication(nextProps);
         }
     }
+*/
 
     loggedIn() {
-        false
+        return false
     }
 
     render() {
@@ -72,6 +79,11 @@ class PostList extends React.Component {
         </BrowserRouter>
         );
     }
+
+    /* render={()=> ( this.loggedIn() ? ( <Redirect t
+     * render = { ()=> (this.loggedIn() ? (<Home/>) : (<Hoge/>)) } />
+     */
+
 
     onTextChange(e) {
         if (e.target.name === "email" ){
