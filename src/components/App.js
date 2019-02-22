@@ -5,6 +5,7 @@ import firebaseui from 'firebaseui';
 import { BrowserRouter, Route, Link, Redirect } from 'react-router-dom'
 import { MyPage } from './MyPage';
 import { LoginPage } from './LoginPage';
+import { CheckIn } from './CheckIn';
 
 const messagesRef = firebaseDb.ref('messages')
 
@@ -29,9 +30,6 @@ const PrivateRoute = ({ component: Component, ...rest}) => (
     />
 );
 */
-
-
-
 
 class PostList extends React.Component {
     constructor(props) {
@@ -69,6 +67,7 @@ class PostList extends React.Component {
                     this.loggedIn() ? <Redirect to="/dashboard"/> : <Home/>
                 )}/>
                 <Route exact path="/login" component={LoginPage} />
+                <Route path="/checkin/:id" component={CheckIn} />
                 <Route path="/mypage/:id" 
                     render={props => <MyPage onTextChange={this.onTextChange} 
                         onButtonClick={this.onButtonClick}
