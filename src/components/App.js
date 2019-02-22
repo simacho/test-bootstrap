@@ -58,7 +58,7 @@ class PostList extends React.Component {
 */
 
     loggedIn() {
-        return false
+        return true
     }
 
     render() {
@@ -66,7 +66,7 @@ class PostList extends React.Component {
             <BrowserRouter>
             <div>
                 <Route exact path="/" render={()=> (
-                    this.loggedIn() ? ( <Redirect to="/dashboard"/> ) : ( <Home/> )
+                    this.loggedIn() ? <Redirect to="/dashboard"/> : <Home/>
                 )}/>
                 <Route exact path="/login" component={LoginPage} />
                 <Route path="/mypage/:id" 
