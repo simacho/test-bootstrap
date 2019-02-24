@@ -9,7 +9,6 @@ import { CheckIn } from './CheckIn';
 
 const messagesRef = firebaseDb.ref('messages')
 
-
 class App extends React.Component {
     render(){
         return (
