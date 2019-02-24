@@ -5,6 +5,7 @@ import firebaseui from 'firebaseui';
 import { BrowserRouter, Route, Link, Redirect } from 'react-router-dom'
 import { MyPage } from './MyPage';
 import { LoginPage } from './LoginPage';
+import { UserList } from './UserList';
 import { CheckIn } from './CheckIn';
 
 const messagesRef = firebaseDb.ref('messages')
@@ -67,6 +68,7 @@ class PostList extends React.Component {
                 )}/>
                 <Route exact path="/login" component={LoginPage} />
                 <Route path="/checkin/:id" component={CheckIn} />
+                <Route path="/userlist" component={UserList} />
                 <Route path="/mypage/:id" 
                     render={props => <MyPage onTextChange={this.onTextChange} 
                         onButtonClick={this.onButtonClick}
