@@ -3,8 +3,8 @@ import firebase from 'firebase';
 import firebaseui from 'firebaseui';
 import { firebaseDb } from '../firebase/index.js'
 import { Button , Alert , Badge , Form } from 'react-bootstrap';
+import { CheckedList } from './CheckedList'
 
-// カスタマーリストの作成
 export class CheckInForm extends Component {
 
     render() {
@@ -36,7 +36,7 @@ export class CheckIn extends React.Component {
         this.onTextChange = this.onTextChange.bind(this)
         this.onButtonClick = this.onButtonClick.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
- 
+
         this.state = { 
             name: "",
             email: "",
@@ -49,12 +49,17 @@ export class CheckIn extends React.Component {
     render() {
         return (
             <div>
-                <CheckInForm 
-                    onTextChange={this.onTextChange} 
-                    onButtonClick={this.onButtonClick}
-                    onSubmit={this.onSubmit}/>
-                <div id="firebaseui-auth-container" />
-                <div id="loader">Now Loading...</div>
+                <div>
+                    <CheckedList />
+                </div>
+                <div>
+                    <CheckInForm 
+                        onTextChange={this.onTextChange} 
+                        onButtonClick={this.onButtonClick}
+                        onSubmit={this.onSubmit}/>
+                    <div id="firebaseui-auth-container" />
+                    <div id="loader">Now Loading...</div>
+                </div>
             </div>
         );
     }
