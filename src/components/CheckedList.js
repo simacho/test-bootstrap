@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import firebase from 'firebase';
 import firebaseui from 'firebaseui';
 import { firebaseDb } from '../firebase/index.js'
+import Pagination from "react-js-pagination";
 
 // カスタマーリストの作成
 const CheckedLine = (props) => {
@@ -23,7 +24,7 @@ class CheckedTable extends React.Component {
         var orderRef = firebaseDb.ref('checkin' )
         orderRef.on("value", (snap) => {
             this.setState({
-                messages: snap.val() 
+                checkin: snap.val() 
             });
         })
     }
