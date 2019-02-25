@@ -3,7 +3,8 @@ import firebase from 'firebase';
 import firebaseui from 'firebaseui';
 import { firebaseDb } from '../firebase/index.js'
 import Pagination from "react-js-pagination";
-
+import 'bootstrap-less';
+ 
 // カスタマーリストの作成
 const CheckedLine = (props) => {
     return (
@@ -17,7 +18,7 @@ const CheckedLine = (props) => {
 class CheckedTable extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { checkin: {} };
+        this.state = { checkin: {} , activePage: 1};
     }
 
     componentWillMount(){
@@ -29,15 +30,29 @@ class CheckedTable extends React.Component {
         })
     }
 
+    handlePageChange(pageNumber) {
+        console.log(`active page is ${pageNumber}`);
+        this.setState({activePage: pageNumber});
+    }
+
     render() {
         let hash = this.state['checkin'];
         return (
+            <div>
+            <Pagination
+            activePage={this.state.activePage}
+            itemsCountPerPage={3}
+            totalItemsCount={10}
+            pageRangeDisplayed={3}
+            onChange={this.handlePageChange}
+            />
             <table class="table table-">
-                {
-                    Object.keys(hash).map((data) => {
-                        return <CheckedLine hash={hash[data]} />
-                    })}
+            {
+                Object.keys(hash).map((data) => {
+                    return <CheckedLine hash={hash[data]} />
+                })}
             </table>
+            </div>
         );
     }
 }
