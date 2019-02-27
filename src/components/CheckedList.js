@@ -2,9 +2,8 @@ import React, { Component } from 'react';
 import firebase from 'firebase';
 import firebaseui from 'firebaseui';
 import { firebaseDb } from '../firebase/index.js'
-import Pagination from "react-js-pagination";
-import 'bootstrap-less';
- 
+import ReactPaginate from 'react-paginate'
+
 // カスタマーリストの作成
 const CheckedLine = (props) => {
     return (
@@ -18,41 +17,57 @@ const CheckedLine = (props) => {
 class CheckedTable extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { checkin: {} , activePage: 1};
+        this.state = { checkin: {} , pageCount: 1 , perPage: 10 , length: 0};
     }
 
     componentWillMount(){
         var orderRef = firebaseDb.ref('checkin' )
         orderRef.on("value", (snap) => {
+            let vhash = snap.val()
+            let length = Object.keys(vhash).length;
+
+            console.log('length'+length)
             this.setState({
-                checkin: snap.val() 
+                checkin: snap.val() ,
+                length: length
             });
         })
     }
 
-    handlePageChange(pageNumber) {
-        console.log(`active page is ${pageNumber}`);
-        this.setState({activePage: pageNumber});
-    }
+    handlePageClick = data => {
+        let selected = data.selected;
+        let offset = Math.ceil(selected * this.state.perPage);
+
+        this.setState({ offset: offset  }, () => {
+            this.loadCommentsFromServer();
+        });
+    };
+
 
     render() {
         let hash = this.state['checkin'];
         return (
             <div>
-            <Pagination
-            activePage={this.state.activePage}
-            itemsCountPerPage={3}
-            totalItemsCount={10}
-            pageRangeDisplayed={3}
-            onChange={this.handlePageChange}
-            />
-            <table class="table table-">
-            {
-                Object.keys(hash).map((data) => {
-                    return <CheckedLine hash={hash[data]} />
-                })}
-            </table>
-            </div>
+                <ReactPaginate
+                    previousLabel={'previous'}
+                    nextLabel={'next'}
+                    breakLabel={'...'}
+                    breakClassName={'break-me'}
+                    pageCount={this.state.pageCount}
+                    marginPagesDisplayed={2}
+                    pageRangeDisplayed={5}
+                    onPageChange={this.handlePageClick}
+                    containerClassName={'pagination'}
+                    subContainerClassName={'pages pagination'}
+                    activeClassName={'active'}
+                />
+                <table class="table table-">
+                    {
+                        Object.keys(hash).map((data) => {
+                            return <CheckedLine hash={hash[data]} />
+                        })}
+                    </table>
+                </div>
         );
     }
 }
