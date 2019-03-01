@@ -17,7 +17,7 @@ const CheckedLine = (props) => {
 class CheckedTable extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { checkin: {} , pageCount: 1 , perPage: 10 , length: 0};
+        this.state = { checkin: {} , dispcheck: {} , pageCount: 1 , perPage: 10 , length: 0};
     }
 
     componentWillMount(){
@@ -31,8 +31,14 @@ class CheckedTable extends React.Component {
                 checkin: snap.val() ,
                 length: length
             });
+
         })
     }
+
+    loadCheckList(){
+
+    }
+
 
     handlePageClick = data => {
         let selected = data.selected;
