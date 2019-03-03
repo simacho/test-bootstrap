@@ -17,14 +17,15 @@ const CheckedLine = (props) => {
 class CheckedTable extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { checkin: {} , dispcheck: [] , pageCount: 1 , perPage: 10 , length: 0 , offset:0 };
+        this.state = { checkin: {} , dispcheck: [] , pageCount: 1 , perPage: 10 , length: 0 , selPage:0 };
     }
 
     // 表示するリストの抽出
-    loadCheckList(vhash,ofst){
+    loadCheckList(vhash,page){
         let filt;
         filt = Object.keys(vhash).filter((value,index,array)=>{
-            let sidx = this.state.perPage * ( ofst  - 1);
+            let sidx = this.state.perPage * page;
+        console.log("sidx " + sidx + " index " + index);
             return ( index >= sidx ) && ( index < sidx + this.state.perPage );
         }) 
         return filt;
@@ -41,18 +42,17 @@ class CheckedTable extends React.Component {
                 checkin: snap.val() ,
                 length: length ,
                 pageCount: Math.ceil(length/this.state.perPage),
-                dispcheck: this.loadCheckList(vhash,this.state.offset)
+                dispcheck: this.loadCheckList(vhash,this.state.selPage)
             });
         })
     }
 
     handlePageClick = data => {
         let selected = data.selected;
-        let offset = Math.ceil(selected * this.state.perPage);
 
         console.log(data.selected);
-        this.loadCheckList( this.state.checkin , selected );
-        this.setState({ offset: offset });
+        this.setState({ selPage:  selected , 
+                dispcheck: this.loadCheckList(this.state.checkin,selected) } );
     };
 
 
