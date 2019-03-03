@@ -17,7 +17,17 @@ const CheckedLine = (props) => {
 class CheckedTable extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { checkin: {} , dispcheck: {} , pageCount: 1 , perPage: 10 , length: 0};
+        this.state = { checkin: {} , dispcheck: [] , pageCount: 1 , perPage: 10 , length: 0 , offset:0 };
+    }
+
+    // 表示するリストの抽出
+    loadCheckList(vhash,ofst){
+        let filt;
+        filt = Object.keys(vhash).filter((value,index,array)=>{
+            let sidx = this.state.perPage * ( ofst  - 1);
+            return ( index >= sidx ) && ( index < sidx + this.state.perPage );
+        }) 
+        return filt;
     }
 
     componentWillMount(){
@@ -29,29 +39,27 @@ class CheckedTable extends React.Component {
             console.log('length'+length)
             this.setState({
                 checkin: snap.val() ,
-                length: length
+                length: length ,
+                pageCount: Math.ceil(length/this.state.perPage),
+                dispcheck: this.loadCheckList(vhash,this.state.offset)
             });
-
         })
     }
-
-    loadCheckList(){
-
-    }
-
 
     handlePageClick = data => {
         let selected = data.selected;
         let offset = Math.ceil(selected * this.state.perPage);
 
-        this.setState({ offset: offset  }, () => {
-            this.loadCommentsFromServer();
-        });
+        console.log(data.selected);
+        this.loadCheckList( this.state.checkin , selected );
+        this.setState({ offset: offset });
     };
 
 
     render() {
         let hash = this.state['checkin'];
+        let dcheck = this.state['dispcheck'];
+        console.log(dcheck);
         return (
             <div>
                 <ReactPaginate
@@ -69,7 +77,7 @@ class CheckedTable extends React.Component {
                 />
                 <table class="table table-">
                     {
-                        Object.keys(hash).map((data) => {
+                        dcheck.map((data) => {
                             return <CheckedLine hash={hash[data]} />
                         })}
                     </table>
