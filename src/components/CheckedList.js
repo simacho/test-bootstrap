@@ -25,7 +25,7 @@ class CheckedTable extends React.Component {
         let filt;
         filt = Object.keys(vhash).filter((value,index,array)=>{
             let sidx = this.state.perPage * page;
-        console.log("sidx " + sidx + " index " + index);
+            // console.log("sidx " + sidx + " index " + index);
             return ( index >= sidx ) && ( index < sidx + this.state.perPage );
         }) 
         return filt;

@@ -41,8 +41,6 @@ export class CheckIn extends React.Component {
             name: "",
             email: "",
             status: "",
-            start_time: "",
-            end_time: "" 
         };
     }
 
@@ -81,12 +79,13 @@ export class CheckIn extends React.Component {
     }
 
     onSubmit(){
+        var start_time = (new Date()).toString();
         firebaseDb.ref('checkin').push({
             "name" : this.state.name,
             "email" : this.state.email,
             "status" : this.state.status,
-            "start_time" : this.state.start_time,
-            "end_time" : this.state.end_time,
+            "start_time" : start_time,
+            "end_time" : "",
         })
         console.log(this.state)
     }
