@@ -4,12 +4,16 @@ import firebaseui from 'firebaseui';
 import { firebaseDb } from '../firebase/index.js'
 import ReactPaginate from 'react-paginate'
 
+// 時刻の抽出とフォーマット
+const ConvDate = (str) => str ? str.match(/\d\d:\d\d:\d\d/) : ""
+
 // カスタマーリストの作成
 const CheckedLine = (props) => {
     return (
         <tr>
             <td>{props.hash['name']}</td>
             <td>{props.hash['email']}</td>
+            <td>{ConvDate(props.hash['start_time'])}</td>
         </tr>
     ); 
 }
