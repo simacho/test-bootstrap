@@ -11,6 +11,8 @@ const ConvDate = (str) => str ? str.match(/\d\d:\d\d:\d\d/) : ""
 const CheckedLine = (props) => {
     return (
         <tr>
+            <td>{props.hash['no']}</td>
+            <td>{props.hash['status']}</td>
             <td>{props.hash['name']}</td>
             <td>{props.hash['email']}</td>
             <td>{ConvDate(props.hash['start_time'])}</td>
