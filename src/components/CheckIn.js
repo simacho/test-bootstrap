@@ -81,15 +81,12 @@ export class CheckIn extends React.Component {
 
     onSubmit(){
         var start_time = (new Date()).toString();
-        var checkin_no
-        // 番号のアップデート
-        this.setState( byPropKey( "no" , this.props.no + 1 );
-
+        var checkin_no = this.state.no + 1;
          firebaseDb.ref('checkin').push({
             "name" : this.state.name,
             "email" : this.state.email,
             "status" : this.state.status,
-            "no" : this.state.no,
+            "no" :  checkin_no,
             "start_time" : start_time,
             "end_time" : "",
         })
