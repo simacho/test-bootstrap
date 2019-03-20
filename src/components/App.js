@@ -7,6 +7,7 @@ import { MyPage } from './MyPage';
 import { LoginPage } from './LoginPage';
 import { UserList } from './UserList';
 import { CheckIn } from './CheckIn';
+import { ShopInfo } from './ShopInfo';
 
 const messagesRef = firebaseDb.ref('messages')
 
@@ -69,6 +70,8 @@ class PostList extends React.Component {
                 <Route exact path="/login" component={LoginPage} />
                 <Route path="/checkin/:id" component={CheckIn} />
                 <Route path="/userlist" component={UserList} />
+                <Route path="/myshop/:id" component={ShopInfo} />
+                
                 <Route path="/mypage/:id" 
                     render={props => <MyPage onTextChange={this.onTextChange} 
                         onButtonClick={this.onButtonClick}
@@ -83,7 +86,6 @@ class PostList extends React.Component {
     /* render={()=> ( this.loggedIn() ? ( <Redirect t
      * render = { ()=> (this.loggedIn() ? (<Home/>) : (<Hoge/>)) } />
      */
-
 
     onTextChange(e) {
         if (e.target.name === "email" ){

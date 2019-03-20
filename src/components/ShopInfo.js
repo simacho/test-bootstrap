@@ -5,21 +5,23 @@ import { firebaseDb } from '../firebase/index.js'
 import { Button , Alert , Badge , Form } from 'react-bootstrap';
 import { CheckedList } from './CheckedList'
 
-export class ShopForm extends Component {
-
+export class ShopInfoForm extends Component {
     render() {
         return (
             <div>
                 <Form onSubmit={this.props.onSubmit}>
                     <Form.Group controlId="formDisplayName">
-                        <Form.Label>店名</Form.Label>
-                        <Form.Control name="name" type="text" placeholder="お店のお名前を入力ください" onChange={this.props.onTextChange} />
-                        </Form.Group>					<Form.Group controlId="formBasicEmail">
+                        <Form.Label>お店の名前</Form.Label>
+                        <Form.Control name="name" type="text" placeholder="お店の名前を入力してください" onChange={this.props.onTextChange} />
+                        </Form.Group>					<Form.Group controlId="formBasiccomment">
                         <Form.Label>コメント</Form.Label>
-                        <Form.Control name="commnet" type="text" placeholder="コメントを表示してください。" onChange={this.props.onTextChange} />
+                        <Form.Control name="comment" type="text" placeholder="" onChange={this.props.onTextChange} />
+                        <Form.Text className="text-muted">
+                            We'll never share your comment with anyone else.
+                        </Form.Text>
                     </Form.Group>
                     <Button variant="primary" type="submit" >
-                        変更する
+                        登録する
                     </Button>
                 </Form>
             </div>
@@ -37,7 +39,6 @@ export class ShopInfo extends React.Component {
         this.state = { 
             name: "",
             comment: "",
-            data: {},
         };
     }
 
@@ -45,7 +46,10 @@ export class ShopInfo extends React.Component {
         return (
             <div>
                 <div>
-                    <ShopForm 
+                    <CheckedList />
+                </div>
+                <div>
+                    <ShopInfoForm 
                         onTextChange={this.onTextChange} 
                         onButtonClick={this.onButtonClick}
                         onSubmit={this.onSubmit}/>
@@ -55,9 +59,6 @@ export class ShopInfo extends React.Component {
             </div>
         );
     }
-
-    // アクセス用のキーワードを生成する
-    getDBKey = (user,shop) => "key_" + user + "_" + shop;
 
     onTextChange(e) {
         if (e.target.name === "name" ){
@@ -76,15 +77,13 @@ export class ShopInfo extends React.Component {
     }
 
     onSubmit(){
-        var start_time = (new Date()).toString();
-        var checkin_no = this.state.no + 2;
-        var accesskey = getDBKey();
-         firebaseDb.ref('shopinfo').push({
+        var ref = firebaseDb.ref('shopinfo/' + this.props.user);
+        ref.set({
             "name" : this.state.name,
-            "comment" : this.state.comment,
-            "data" : this.state.data,
+            "comment" : this.state.email,
         })
        console.log(this.state)
     }
 }
+
 
