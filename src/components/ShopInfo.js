@@ -5,17 +5,17 @@ import { firebaseDb } from '../firebase/index.js'
 import { Button , Alert , Badge , Form } from 'react-bootstrap';
 import { CheckedList } from './CheckedList'
 
-export class ShopInfoForm extends Component {
-    render() {
+const ShopInfoForm = (props) => {
         return (
             <div>
-                <Form onSubmit={this.props.onSubmit}>
+                <Form onSubmit={props.onSubmit}>
                     <Form.Group controlId="formDisplayName">
                         <Form.Label>お店の名前</Form.Label>
-                        <Form.Control name="name" type="text" placeholder="お店の名前を入力してください" onChange={this.props.onTextChange} />
-                        </Form.Group>					<Form.Group controlId="formBasiccomment">
+                        <Form.Control name="name" type="text" value={props.name} onChange={props.onTextChange} />
+                        </Form.Group>
+                        <Form.Group controlId="formBasiccomment">
                         <Form.Label>コメント</Form.Label>
-                        <Form.Control name="comment" type="text" placeholder="" onChange={this.props.onTextChange} />
+                        <Form.Control name="comment" type="text" value={props.comment} onChange={props.onTextChange} />
                         <Form.Text className="text-muted">
                             We'll never share your comment with anyone else.
                         </Form.Text>
@@ -26,7 +26,6 @@ export class ShopInfoForm extends Component {
                 </Form>
             </div>
         );
-    }
 }
 
 export class ShopInfo extends React.Component {
@@ -42,19 +41,30 @@ export class ShopInfo extends React.Component {
         };
     }
 
+    componentWillMount(){
+        var orderRef = firebaseDb.ref('shopinfo/' + this.props.id )
+        orderRef.on("value", (snap) => {
+        console.log(snap.val())
+            if ( snap.exists() )
+            this.setState({
+                name: snap.val() ? snap.val()["name"] : "",
+                comment: snap.val() ? snap.val()["comment"] : ""
+            });
+            console.log(this.state)
+        })
+    }
+
     render() {
         return (
             <div>
                 <div>
-                    <CheckedList />
-                </div>
-                <div>
                     <ShopInfoForm 
+                        name = {this.state.name}
+                        comment = {this.state.comment}
                         onTextChange={this.onTextChange} 
                         onButtonClick={this.onButtonClick}
                         onSubmit={this.onSubmit}/>
                     <div id="firebaseui-auth-container" />
-                    <div id="loader">Now Loading...</div>
                 </div>
             </div>
         );
@@ -77,10 +87,10 @@ export class ShopInfo extends React.Component {
     }
 
     onSubmit(){
-        var ref = firebaseDb.ref('shopinfo/' + this.props.user);
+        var ref = firebaseDb.ref('shopinfo/' + this.props.id);
         ref.set({
             "name" : this.state.name,
-            "comment" : this.state.email,
+            "comment" : this.state.comment,
         })
        console.log(this.state)
     }

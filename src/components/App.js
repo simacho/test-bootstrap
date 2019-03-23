@@ -70,7 +70,7 @@ class PostList extends React.Component {
                 <Route exact path="/login" component={LoginPage} />
                 <Route path="/checkin/:id" component={CheckIn} />
                 <Route path="/userlist" component={UserList} />
-                <Route path="/myshop/:id" component={ShopInfo} />
+                <Route path="/shopinfo/:id" component={ShopInfo} />
                 
                 <Route path="/mypage/:id" 
                     render={props => <MyPage onTextChange={this.onTextChange} 
