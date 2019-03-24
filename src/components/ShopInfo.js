@@ -6,26 +6,26 @@ import { Button , Alert , Badge , Form } from 'react-bootstrap';
 import { CheckedList } from './CheckedList'
 
 const ShopInfoForm = (props) => {
-        return (
-            <div>
-                <Form onSubmit={props.onSubmit}>
-                    <Form.Group controlId="formDisplayName">
-                        <Form.Label>お店の名前</Form.Label>
-                        <Form.Control name="name" type="text" value={props.name} onChange={props.onTextChange} />
-                        </Form.Group>
-                        <Form.Group controlId="formBasiccomment">
-                        <Form.Label>コメント</Form.Label>
-                        <Form.Control name="comment" type="text" value={props.comment} onChange={props.onTextChange} />
-                        <Form.Text className="text-muted">
-                            We'll never share your comment with anyone else.
-                        </Form.Text>
-                    </Form.Group>
-                    <Button variant="primary" type="submit" >
-                        登録する
-                    </Button>
-                </Form>
-            </div>
-        );
+    return (
+        <div>
+            <Form onSubmit={props.onSubmit}>
+                <Form.Group controlId="formDisplayName">
+                    <Form.Label>お店の名前</Form.Label>
+                    <Form.Control name="name" type="text" value={props.name} onChange={props.onTextChange} />
+                </Form.Group>
+                <Form.Group controlId="formBasiccomment">
+                    <Form.Label>コメント</Form.Label>
+                    <Form.Control name="comment" type="text" value={props.comment} onChange={props.onTextChange} />
+                    <Form.Text className="text-muted">
+                        We'll never share your comment with anyone else.
+                    </Form.Text>
+                </Form.Group>
+                <Button variant="primary" type="submit" >
+                    登録する
+                </Button>
+            </Form>
+        </div>
+    );
 }
 
 export class ShopInfo extends React.Component {
@@ -44,13 +44,14 @@ export class ShopInfo extends React.Component {
     componentWillMount(){
         var orderRef = firebaseDb.ref('shopinfo/' + this.props.id )
         orderRef.on("value", (snap) => {
-        console.log(snap.val())
-            if ( snap.exists() )
-            this.setState({
-                name: snap.val() ? snap.val()["name"] : "",
-                comment: snap.val() ? snap.val()["comment"] : ""
-            });
-            console.log(this.state)
+            console.log(snap.val())
+            if ( snap.exists() ){
+                this.setState({
+                    name: snap.val() ? snap.val()["name"] : "",
+                    comment: snap.val() ? snap.val()["comment"] : ""
+                });
+                console.log(this.state)
+            }
         })
     }
 
@@ -92,7 +93,7 @@ export class ShopInfo extends React.Component {
             "name" : this.state.name,
             "comment" : this.state.comment,
         })
-       console.log(this.state)
+        console.log(this.state)
     }
 }
 
