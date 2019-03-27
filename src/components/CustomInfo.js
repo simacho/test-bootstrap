@@ -61,9 +61,10 @@ export class CustomInfo extends React.Component {
     }
 
     onSubmit(event){
-        //        var ref = firebaseDb.ref('custominfo/' + this.props.id);
-        // ref.set({this.state})
-        console.log(event);
+        var ref = firebaseDb.ref('custominfo/' + this.props.id);
+        var data = JSON.parse(this.state.text);
+        ref.set(data)
+        console.log(data);
     }
 }
 
