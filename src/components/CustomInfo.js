@@ -11,7 +11,7 @@ const CustomInfoForm = (props) => {
             <Form onSubmit={props.onSubmit}>
                 <Form.Group controlId="exampleForm.ControlTextarea1">
                     <Form.Label>Example textarea</Form.Label>
-                    <Form.Control as="textarea" rows="3" />
+                    <Form.Control name="textbox" as="textarea" rows="3" onChange={props.onChange} />
                 </Form.Group>
                 <Button variant="primary" type="submit" >
                     登録する
@@ -26,7 +26,7 @@ export class CustomInfo extends React.Component {
         super(props);
         this.onSubmit = this.onSubmit.bind(this)
         this.onChange = this.onChange.bind(this)
-        this.state = {};
+        this.state = { text: "" };
     }
 
     componentWillMount(){
@@ -45,18 +45,19 @@ export class CustomInfo extends React.Component {
             <div>
                 <div>
                     <CustomInfoForm 
-                        onSubmit={this.onSubmit} />
+                        onSubmit={this.onSubmit} onChange={this.onChange} />
                     <div id="firebaseui-auth-container" />
                 </div>
             </div>
         );
     }
 
-
-    onSubmit(event){
-        //        var ref = firebaseDb.ref('custominfo/' + this.props.id);
-        // ref.set({this.state})
-        console.log(event);
+    onChange(e) {
+        if (e.target.name === "textbox" ){
+            this.setState({
+                "text": e.target.value,
+            });
+        }
     }
 
     onSubmit(event){
