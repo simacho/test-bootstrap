@@ -11,7 +11,7 @@ const CustomInfoForm = (props) => {
             <Form onSubmit={props.onSubmit}>
                 <Form.Group controlId="exampleForm.ControlTextarea1">
                     <Form.Label>Example textarea</Form.Label>
-                    <Form.Control name="textbox" as="textarea" rows="3" onChange={props.onChange} />
+                    <Form.Control name="textbox" value={props.text} as="textarea" rows="3" onChange={props.onChange} />
                 </Form.Group>
                 <Button variant="primary" type="submit" >
                     登録する
@@ -30,11 +30,11 @@ export class CustomInfo extends React.Component {
     }
 
     componentWillMount(){
-        var orderRef = firebaseDb.ref('custominfo/' + this.props.id )
+        var orderRef = firebaseDb.ref('custominfo/' + this.props.match.params.id )
         orderRef.on("value", (snap) => {
-            console.log(snap.val())
+            console.log(this.props)
             if ( snap.exists() ){
-                //   this.setState({snap.val()});
+                this.setState( { text: JSON.stringify(snap.val()) });
                 console.log(this.state)
             }
         })
@@ -45,6 +45,7 @@ export class CustomInfo extends React.Component {
             <div>
                 <div>
                     <CustomInfoForm 
+                        text={this.state.text}
                         onSubmit={this.onSubmit} onChange={this.onChange} />
                     <div id="firebaseui-auth-container" />
                 </div>
@@ -61,10 +62,10 @@ export class CustomInfo extends React.Component {
     }
 
     onSubmit(event){
-        var ref = firebaseDb.ref('custominfo/' + this.props.id);
+        var ref = firebaseDb.ref('custominfo/' + this.props.match.params.id);
         var data = JSON.parse(this.state.text);
         ref.set(data)
-        console.log(data);
+        console.log(this.props);
     }
 }
 
