@@ -4,11 +4,12 @@ import firebaseui from 'firebaseui';
 import { firebaseDb } from '../firebase/index.js'
 import { Button , Alert , Badge , Form } from 'react-bootstrap';
 import { CheckedList } from './CheckedList'
+import { TopNavbar } from './TopNavbar'
 
 export class CheckInForm extends Component {
 
     render() {
-        return (
+        return ( 
             <div>
                 <Form onSubmit={this.props.onSubmit}>
                     <Form.Group controlId="formDisplayName">
@@ -48,6 +49,7 @@ export class CheckIn extends React.Component {
     render() {
         return (
             <div>
+                <TopNavbar />
                 <div>
                     <CheckedList />
                 </div>

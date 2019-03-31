@@ -9,6 +9,7 @@ import { UserList } from './UserList';
 import { CheckIn } from './CheckIn';
 import { ShopInfo } from './ShopInfo';
 import { CustomInfo } from './CustomInfo';
+import { MapTest } from './Map';
 
 const messagesRef = firebaseDb.ref('messages')
 
@@ -71,6 +72,7 @@ class PostList extends React.Component {
                 <Route exact path="/login" component={LoginPage} />
                 <Route path="/checkin/:id" component={CheckIn} />
                 <Route path="/userlist" component={UserList} />
+                <Route path="/map" component={MapTest} />
                 <Route path="/shopinfo/:id" component={ShopInfo} />
                 <Route path="/custominfo/:id" component={CustomInfo} />
                 
