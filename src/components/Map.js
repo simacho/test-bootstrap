@@ -1,84 +1,47 @@
-import React, {PropTypes} from "react"
+import _ from "lodash";
+import React from "react";
+import { compose, withProps } from "recompose";
+import {
+      withScriptjs,
+      withGoogleMap,
+      GoogleMap,
+      Marker
+} from "react-google-maps";
+import GitHubForkRibbon from "react-github-fork-ribbon";
 
-import GoogleMap from "react-google-map"
-import GoogleMapLoader from "react-google-maps-loader"
+const MyMapComponent = compose(
+      withProps({
+              googleMapURL:
+                "https://maps.googleapis.com/maps/api/js?key=AIzaSyCupuqcB7i6-b-32uo0iF4n6_SpPvHe_YY&v=3.exp&libraries=geometry,drawing,places",
+                    loadingElement: <div style={{ height: `100%` }} />,
+                        containerElement: <div style={{ height: `400px` }} />,
+                            mapElement: <div style={{ height: `100%` }} />
+                              }),
+      withScriptjs,
+      withGoogleMap
+)(props => (
+  <GoogleMap defaultZoom={8} defaultCenter={{ lat: -34.397, lng: 150.644 }}>
+        <Marker position={{ lat: -34.397, lng: 150.644 }} />
+      </GoogleMap>
+));
 
-import iconMarker from "./assets/marker.jpeg"
-import iconMarkerHover from "./assets/markerhover.jpeg"
+const enhance = _.identity;
 
-import styles from "./index.css"
+const ReactGoogleMaps = () => [
+      <GitHubForkRibbon
+              key="ribbon"
+        href="https://github.com/tomchentw/react-google-maps"
+        target="_blank"
+        rel="noopener noreferrer"
+        position="right"
+      >
+        Fork me on GitHub
+      </GitHubForkRibbon>,
+      <MyMapComponent key="map" />
+];
 
-const MY_API_KEY = "AIzaSyCupuqcB7i6-b-32uo0iF4n6_SpPvHe_YY"
+export default enhance(ReactGoogleMaps);
 
-const Map = ({googleMaps}) => (
-  // GoogleMap component has a 100% height style.
-  // You have to set the DOM parent height.
-  // So you can perfectly handle responsive with differents heights.
-  <div className={styles.map}>
-    <GoogleMap
-      googleMaps={googleMaps}
-      // You can add and remove coordinates on the fly.
-      // The map will rerender new markers and remove the old ones.
-      coordinates={[
-        {
-          title: "Toulouse",
-          icon: iconMarker,
-          position: {
-            lat: 43.604363,
-            lng: 1.443363,
-          },
-          onLoaded: (googleMaps, map, marker) => {
-            // Set Marker animation
-            marker.setAnimation(googleMaps.Animation.BOUNCE)
 
-            // Define Marker InfoWindow
-            const infoWindow = new googleMaps.InfoWindow({
-              content: `
-                <div>
-                  <h3>Toulouse<h3>
-                  <div>
-                    Toulouse is the capital city of the southwestern
-                    French department of Haute-Garonne,
-                    as well as of the Occitanie region.
-                  </div>
-                </div>
-              `,
-            })
 
-            // Open InfoWindow when Marker will be clicked
-            googleMaps.event.addListener(marker, "click", () => {
-              infoWindow.open(map, marker)
-            })
-
-            // Change icon when Marker will be hovered
-            googleMaps.event.addListener(marker, "mouseover", () => {
-              marker.setIcon(iconMarkerHover)
-            })
-
-            googleMaps.event.addListener(marker, "mouseout", () => {
-              marker.setIcon(iconMarker)
-            })
-
-            // Open InfoWindow directly
-            infoWindow.open(map, marker)
-          },
-        }
-      ]}
-      center={{lat: 43.604363, lng: 1.443363}}
-      zoom={8}
-      onLoaded={(googleMaps, map) => {
-        map.setMapTypeId(googleMaps.MapTypeId.SATELLITE)
-      }}
-    />
-  </div>
-)
-
-Map.propTypes = {
-  googleMaps: PropTypes.object.isRequired,
-}
-
-export default GoogleMapLoader(Map, {
-  libraries: ["places"],
-  key: MY_API_KEY,
-})
 
