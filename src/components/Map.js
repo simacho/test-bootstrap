@@ -1,41 +1,84 @@
-import React from "react"
-import ReactGoogleMapLoader from "react-google-maps-loader"
-import ReactGoogleMap from "react-google-map"
+import React, {PropTypes} from "react"
 
-const bnCoord = {
-    lat: 44.597923,
-    lng: 0.873799,
+import GoogleMap from "react-google-map"
+import GoogleMapLoader from "react-google-maps-loader"
+
+import iconMarker from "./assets/marker.jpeg"
+import iconMarkerHover from "./assets/markerhover.jpeg"
+
+import styles from "./index.css"
+
+const MY_API_KEY = "AIzaSyCupuqcB7i6-b-32uo0iF4n6_SpPvHe_YY"
+
+const Map = ({googleMaps}) => (
+  // GoogleMap component has a 100% height style.
+  // You have to set the DOM parent height.
+  // So you can perfectly handle responsive with differents heights.
+  <div className={styles.map}>
+    <GoogleMap
+      googleMaps={googleMaps}
+      // You can add and remove coordinates on the fly.
+      // The map will rerender new markers and remove the old ones.
+      coordinates={[
+        {
+          title: "Toulouse",
+          icon: iconMarker,
+          position: {
+            lat: 43.604363,
+            lng: 1.443363,
+          },
+          onLoaded: (googleMaps, map, marker) => {
+            // Set Marker animation
+            marker.setAnimation(googleMaps.Animation.BOUNCE)
+
+            // Define Marker InfoWindow
+            const infoWindow = new googleMaps.InfoWindow({
+              content: `
+                <div>
+                  <h3>Toulouse<h3>
+                  <div>
+                    Toulouse is the capital city of the southwestern
+                    French department of Haute-Garonne,
+                    as well as of the Occitanie region.
+                  </div>
+                </div>
+              `,
+            })
+
+            // Open InfoWindow when Marker will be clicked
+            googleMaps.event.addListener(marker, "click", () => {
+              infoWindow.open(map, marker)
+            })
+
+            // Change icon when Marker will be hovered
+            googleMaps.event.addListener(marker, "mouseover", () => {
+              marker.setIcon(iconMarkerHover)
+            })
+
+            googleMaps.event.addListener(marker, "mouseout", () => {
+              marker.setIcon(iconMarker)
+            })
+
+            // Open InfoWindow directly
+            infoWindow.open(map, marker)
+          },
+        }
+      ]}
+      center={{lat: 43.604363, lng: 1.443363}}
+      zoom={8}
+      onLoaded={(googleMaps, map) => {
+        map.setMapTypeId(googleMaps.MapTypeId.SATELLITE)
+      }}
+    />
+  </div>
+)
+
+Map.propTypes = {
+  googleMaps: PropTypes.object.isRequired,
 }
 
-export class MapTest extends React.Component {
-    render(){
-        return (
-            <div>
-                <ReactGoogleMapLoader
-                    params={{
-                        key: "AIzaSyCupuqcB7i6-b-32uo0iF4n6_SpPvHe_YY",
-                        libraries: "places,geometry", // To request multiple libraries, separate them with a comma
-                    }}
-                    style={{height: "100%"}}
-                    render={googleMaps => {
-                        return (
-                            <ReactGoogleMap
-                                googleMaps={googleMaps}
-                                coordinates={[
-                                    {
-                                        title: "Bosc Nègre",
-                                        position: bnCoord,
-                                    },
-                                ]}
-                                center={bnCoord}
-                                zoom={8}
-                            />
-                        )
-                    }}
-                />
-            </div>
-);
-    }
-}
+export default GoogleMapLoader(Map, {
+  libraries: ["places"],
+  key: MY_API_KEY,
+})
 
-export default MapTest
