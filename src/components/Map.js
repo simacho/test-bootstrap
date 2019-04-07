@@ -9,26 +9,6 @@ import {
 } from "react-google-maps";
 import GitHubForkRibbon from "react-github-fork-ribbon";
 
-var position_lat = 0.0;
-var position_longi = 0.0;
-
-const GetPosition = () => {
-    var lat = 0.0;
-    var longi = 0.0;
-    var posi = [];
-    if( navigator.geolocation ){
-        navigator.geolocation.getCurrentPosition(
-          pos => { position_lat = pos.coords.latitude; position_longi = pos.coords.longitude;},
-          err => console.log(err)
-        );
-        console.log(position_lat);
-    } else {
-        console.log("This is no geolocation");
-    }
-
-    return [ lat , longi ]
-}
-
 const MyMapComponent = compose(
      withProps({
               googleMapURL:
@@ -40,26 +20,64 @@ const MyMapComponent = compose(
       withScriptjs,
       withGoogleMap
 )(props => (
-  <GoogleMap defaultZoom={8} defaultCenter={{ lat: 0.0, lng: 0.0 }}>
-        <Marker position={{ lat: 0.0, lng: 0.0 }} />
+  <GoogleMap defaultZoom={8} defaultCenter={{ this.state.lat: 0.0, lng: 0.0 }}>
+        <Marker position={{ this.state.lat: 0.0, this.state.lng: 0.0 }} />
       </GoogleMap>
 ));
 
 const enhance = _.identity;
 
-const ReactGoogleMaps = () => [
-      <GitHubForkRibbon
-              key="ribbon"
-        href="https://github.com/tomchentw/react-google-maps"
-        target="_blank"
-        rel="noopener noreferrer"
-        position="right"
-      >
-        Fork me on GitHub
-      </GitHubForkRibbon>,
-    <GetPosition />,
-      <MyMapComponent key="map" />
-];
+
+class ReactGoogleMaps extends React.Component {
+    
+    constructor(props) {
+        super(props);
+        this.state = { 
+            lat : 0.0,
+            lng : 0.0,
+        };
+    }
+
+    componentWillMount(){
+        this.GetPosition();
+    }
+
+    getCurrentPosition = () => {
+        return new Promise(
+            (
+                resolve: (value?: Position) => void,
+                reject: (reason?: PositionError) => void
+            ) => {
+                navigator.geolocation.getCurrentPosition(resolve, reject);
+            }
+        );
+    }
+
+    GetPosition = async() => {
+        const s = await this.getCurrentPosition();
+
+        this.setState( {lat: s.coords.latitude , lng: s.coords.longtitude });
+
+        console.log(s.coords);
+    }
+
+    render(){
+        return (
+            [
+                <GitHubForkRibbon
+                    key="ribbon"
+                    href="https://github.com/tomchentw/react-google-maps"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    position="right"
+                >
+                    Fork me on GitHub
+                </GitHubForkRibbon>,
+                <MyMapComponent key="map" />
+            ]
+        );
+    }
+}
 
 export default enhance(ReactGoogleMaps);
 
