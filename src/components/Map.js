@@ -8,6 +8,7 @@ import {
       Marker
 } from "react-google-maps";
 import GitHubForkRibbon from "react-github-fork-ribbon";
+import { useState } from "react";
 
 const MyMapComponent = compose(
      withProps({
@@ -20,13 +21,16 @@ const MyMapComponent = compose(
       withScriptjs,
       withGoogleMap
 )(props => (
-  <GoogleMap defaultZoom={8} defaultCenter={{ this.state.lat: 0.0, lng: 0.0 }}>
-        <Marker position={{ this.state.lat: 0.0, this.state.lng: 0.0 }} />
+  <GoogleMap defaultZoom={8} defaultCenter={{ lat: 0.0, lng: 0.0 }}>
+        <Marker position={{ lat: 0.0, lng: 0.0 }} />
       </GoogleMap>
 ));
 
 const enhance = _.identity;
 
+const test = () => {
+    const [hoge,setHoge] = useState(0);
+}
 
 class ReactGoogleMaps extends React.Component {
     
@@ -73,6 +77,7 @@ class ReactGoogleMaps extends React.Component {
                 >
                     Fork me on GitHub
                 </GitHubForkRibbon>,
+                <p> Version {React.version} </p>,
                 <MyMapComponent key="map" />
             ]
         );
