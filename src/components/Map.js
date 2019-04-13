@@ -11,7 +11,72 @@ import GitHubForkRibbon from "react-github-fork-ribbon";
 import { useState } from "react";
 import { HogeHogeTest } from "./ReactHooksTest"; 
 
+import ReactGoogleMapLoader from "react-google-maps-loader"
+import ReactGoogleMap from "react-google-map"
 
+import GoogleMapReact from 'google-map-react';
+ 
+const AnyReactComponent = ({ text }) => <div>{text}</div>;
+ 
+class SimpleMap extends React.Component {
+  static defaultProps = {
+    center: {
+      lat: 59.95,
+      lng: 30.33
+    },
+    zoom: 11
+  };
+ 
+  render() {
+    return (
+      // Important! Always set the container height explicitly
+      <div style={{ height: '400px', width: '100%' }}>
+        <GoogleMapReact
+          bootstrapURLKeys={{ key:"AIzaSyCupuqcB7i6-b-32uo0iF4n6_SpPvHe_YY" /* YOUR KEY HERE */ }}
+          defaultCenter={this.props.center}
+          defaultZoom={this.props.zoom}
+        >
+          <AnyReactComponent
+            lat={59.955413}
+            lng={30.337844}
+            text="My Marker"
+          />
+        </GoogleMapReact>
+      </div>
+    );
+  }
+}
+
+const bnCoord = {
+    lat: 44.597923,
+    lng: 0.873799,
+}
+
+const Map = () => (
+    <ReactGoogleMapLoader
+        params={{
+            key: "AIzaSyCupuqcB7i6-b-32uo0iF4n6_SpPvHe_YY",
+        }}
+        style={{height: "100%"}}
+        render={googleMaps => {
+            return (
+                googleMaps && (
+                    <ReactGoogleMap
+                        googleMaps={googleMaps}
+                        coordinates={[
+                            {
+                                title: "Bosc Nègre",
+                                position: bnCoord,
+                            },
+                        ]}
+                        center={bnCoord}
+                        zoom={8}
+                    />
+                )
+            )
+        }}
+    />
+)
 
 const MyMapComponent = compose(
      withProps({
@@ -81,15 +146,14 @@ class ReactGoogleMaps extends React.Component {
                     Fork me on GitHub
                 </GitHubForkRibbon>,
                 <p> Version {React.version} </p>,
+                <SimpleMap />,
                 <HogeHogeTest />,
-                <MyMapComponent key="map" />
+                //             <MyMapComponent key="map" />
             ]
         );
     }
 }
 
 export default enhance(ReactGoogleMaps);
-
-
 
 
