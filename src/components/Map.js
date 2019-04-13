@@ -1,23 +1,45 @@
 import _ from "lodash";
 import React from "react";
-import { compose, withProps } from "recompose";
-import {
-      withScriptjs,
-      withGoogleMap,
-      GoogleMap,
-      Marker
-} from "react-google-maps";
 import GitHubForkRibbon from "react-github-fork-ribbon";
-import { useState } from "react";
+import { useState , useEffect } from "react";
 import { HogeHogeTest } from "./ReactHooksTest"; 
-
-import ReactGoogleMapLoader from "react-google-maps-loader"
-import ReactGoogleMap from "react-google-map"
-
 import GoogleMapReact from 'google-map-react';
  
 const AnyReactComponent = ({ text }) => <div>{text}</div>;
- 
+
+const SimpleMap2 = (props) => {
+	const
+        [ param , setParam ] = useState({center: {lat:59.95, lng: 30.33}, zoom: 11});
+    const [ lat , setLat ] = useState( 59.95 );
+    const [ longti , setLongti ] = useState( 30.33 );
+
+    useEffect(()=> {
+        const s = navigator.geolocation.getCurrentPosition( 
+            //pos => { setParam( {center: {lat: pos.coords.latitude , lng: pos.coords.longtitude } , zoom:11 } ) },
+            pos => { setLat( pos.coords.latitude || 0.0 );
+                    setLongti( pos.coords.longtitude || 0.0 ); },
+            err => console.log(err) ); 
+    },[lat,longti])
+
+    return (
+        // Important! Always set the container height explicitly
+      <div style={{ height: '400px', width: '100%' }}>
+        <GoogleMapReact
+          bootstrapURLKeys={{ key:"AIzaSyCupuqcB7i6-b-32uo0iF4n6_SpPvHe_YY" /* YOUR KEY HERE */ }}
+          center={ [lat,longti] }
+          // defaultCenter={ param.center }
+          defaultZoom={ param.zoom }
+        >
+          <AnyReactComponent
+            lat={ lat }
+            lng={ longti }
+            text="My Marker"
+          />
+        </GoogleMapReact>
+      </div>
+    );
+}
+
 class SimpleMap extends React.Component {
   static defaultProps = {
     center: {
@@ -46,53 +68,6 @@ class SimpleMap extends React.Component {
     );
   }
 }
-
-const bnCoord = {
-    lat: 44.597923,
-    lng: 0.873799,
-}
-
-const Map = () => (
-    <ReactGoogleMapLoader
-        params={{
-            key: "AIzaSyCupuqcB7i6-b-32uo0iF4n6_SpPvHe_YY",
-        }}
-        style={{height: "100%"}}
-        render={googleMaps => {
-            return (
-                googleMaps && (
-                    <ReactGoogleMap
-                        googleMaps={googleMaps}
-                        coordinates={[
-                            {
-                                title: "Bosc Nègre",
-                                position: bnCoord,
-                            },
-                        ]}
-                        center={bnCoord}
-                        zoom={8}
-                    />
-                )
-            )
-        }}
-    />
-)
-
-const MyMapComponent = compose(
-     withProps({
-              googleMapURL:
-                "https://maps.googleapis.com/maps/api/js?key=AIzaSyCupuqcB7i6-b-32uo0iF4n6_SpPvHe_YY&v=3.exp&libraries=geometry,drawing,places",
-                    loadingElement: <div style={{ height: `100%` }} />,
-                        containerElement: <div style={{ height: `400px` }} />,
-                            mapElement: <div style={{ height: `100%` }} />
-                              }),
-      withScriptjs,
-      withGoogleMap
-)(props => (
-  <GoogleMap defaultZoom={8} defaultCenter={{ lat: 0.0, lng: 0.0 }}>
-        <Marker position={{ lat: 0.0, lng: 0.0 }} />
-      </GoogleMap>
-));
 
 const enhance = _.identity;
 
@@ -146,7 +121,7 @@ class ReactGoogleMaps extends React.Component {
                     Fork me on GitHub
                 </GitHubForkRibbon>,
                 <p> Version {React.version} </p>,
-                <SimpleMap />,
+                <SimpleMap2 />,
                 <HogeHogeTest />,
                 //             <MyMapComponent key="map" />
             ]
