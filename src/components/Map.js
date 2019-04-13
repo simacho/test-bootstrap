@@ -9,6 +9,9 @@ import {
 } from "react-google-maps";
 import GitHubForkRibbon from "react-github-fork-ribbon";
 import { useState } from "react";
+import { HogeHogeTest } from "./ReactHooksTest"; 
+
+
 
 const MyMapComponent = compose(
      withProps({
@@ -78,6 +81,7 @@ class ReactGoogleMaps extends React.Component {
                     Fork me on GitHub
                 </GitHubForkRibbon>,
                 <p> Version {React.version} </p>,
+                <HogeHogeTest />,
                 <MyMapComponent key="map" />
             ]
         );
