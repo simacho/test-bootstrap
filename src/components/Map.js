@@ -4,6 +4,7 @@ import GitHubForkRibbon from "react-github-fork-ribbon";
 import { useState , useEffect } from "react";
 import { HogeHogeTest } from "./ReactHooksTest"; 
 import GoogleMapReact from 'google-map-react';
+import { BbsThread , BbsCreate } from "./BbsThread";
  
 const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
@@ -55,6 +56,8 @@ class ReactGoogleMaps extends React.Component {
                 </GitHubForkRibbon>,
                 <p> Version {React.version} </p>,
                 <SimpleMap2 />,
+                <BbsThread />,
+                <BbsCreate />,
             ]
         );
     }
