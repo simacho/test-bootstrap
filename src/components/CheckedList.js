@@ -44,6 +44,8 @@ class CheckedTable extends React.Component {
             let length = Object.keys(vhash).length;
 
             console.log('length'+length)
+            console.log( snap.val() );
+
             this.setState({
                 checkin: snap.val() ,
                 length: length ,

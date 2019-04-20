@@ -42,7 +42,8 @@ export const BbsCreate = (props) => {
 const BbsLine = (props) => {
     return (
         <tr>
-            <td>hoge</td>
+            <td>{props.hash.name}</td>
+            <td>{props.key}</td>
         </tr>
     ); 
 }
@@ -55,17 +56,19 @@ export const BbsThread = () => {
         orderRef.on("value", (snap) => {
             setBbs( snap.val() );
         })        
-    },[bbs] )
+    },[{bbs}] )
 
-    if (bbs == null || bbs['bbs'] == null) return "BBS none";
-    let hash = Object.keys(bbs['bbs']);
+    if (bbs == null) return "BBS none";
+    let keys = Object.keys(bbs);
+
+        console.log(bbs);
 
     return (
         <div>
-            <table class="table">
+            <table class="table table-hover">
                 {
-                    hash ? hash.map(data => {
-                        return <BbsLine hash={hash[data]} />
+                    keys ? keys.map(data => {
+                        return <BbsLine key={data} hash={bbs[data]} />
                     }) : "Nothing Data"
                 }
             </table>

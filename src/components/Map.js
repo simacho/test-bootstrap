@@ -5,6 +5,7 @@ import { useState , useEffect } from "react";
 import { HogeHogeTest } from "./ReactHooksTest"; 
 import GoogleMapReact from 'google-map-react';
 import { BbsThread , BbsCreate } from "./BbsThread";
+import { MessageCreate } from "./BbsMessage";
  
 const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
@@ -58,6 +59,7 @@ class ReactGoogleMaps extends React.Component {
                 <SimpleMap2 />,
                 <BbsThread />,
                 <BbsCreate lat="30" lng="30" />,
+                <MessageCreate />,
             ]
         );
     }
