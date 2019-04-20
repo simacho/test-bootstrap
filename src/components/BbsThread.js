@@ -61,7 +61,7 @@ export const BbsThread = () => {
     if (bbs == null) return "BBS none";
     let keys = Object.keys(bbs);
 
-        console.log(bbs);
+    console.log(bbs); // テストメッセージ
 
     return (
         <div>
