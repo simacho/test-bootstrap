@@ -4,6 +4,9 @@ import { Button , Alert , Badge , Form } from 'react-bootstrap';
 import firebase from 'firebase';
 import firebaseui from 'firebaseui';
 import { firebaseDb } from '../firebase/index.js'
+import ReactDOM from 'react-dom';
+import { BrowserRouter as Router, Route, Switch  } from 'react-router-dom';
+import useReactRouter from 'use-react-router'
 
 export const BbsCreate = (props) => {
     const [ name , setName ] = useState( "Anonymous Thread"),
@@ -18,7 +21,6 @@ export const BbsCreate = (props) => {
             "lat" : lat,
             "lng" : lng,
         })
-        console.log("ThreadCreate")
     }
 
     return ( 
@@ -27,7 +29,7 @@ export const BbsCreate = (props) => {
                 <Form.Group controlId="formDisplayName">
                     <Form.Label>スレッド名</Form.Label>
                     <Form.Control name="name" type="text"
-                        placeholder="スレッドの名称を入兎力してください"
+                        placeholder="スレッドの名称を入力してください"
                         onChange={(e)=>{ setName( e.target.value ); console.log(e.target.value);} } />
                 </Form.Group>
                 <Button variant="primary" type="submit" >
@@ -44,11 +46,16 @@ const BbsLine = (props) => {
         <tr>
             <td>{props.hash.name}</td>
             <td>{props.key}</td>
+            {/*            <td><Button onClick={()=>{
+                //   history.push('/messages')
+                //            }}>確認する</Button></td>
+                */}
         </tr>
     ); 
 }
 
 export const BbsThread = () => {
+    const { history, location, match  } = useReactRouter();
     const [ bbs , setBbs ] = useState( {} );
 
     useEffect( ()=> {
@@ -56,12 +63,10 @@ export const BbsThread = () => {
         orderRef.on("value", (snap) => {
             setBbs( snap.val() );
         })        
-    },[{bbs}] )
+    },[] )
 
     if (bbs == null) return "BBS none";
     let keys = Object.keys(bbs);
-
-    console.log(bbs); // テストメッセージ
 
     return (
         <div>
