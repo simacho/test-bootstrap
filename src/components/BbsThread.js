@@ -1,11 +1,10 @@
-import React, { Component } from 'react';
-import { useState , useEffect } from "react";
+import React, { Component } from 'react'; import { useState , useEffect } from "react";
 import { Button , Alert , Badge , Form } from 'react-bootstrap';
 import firebase from 'firebase';
 import firebaseui from 'firebaseui';
 import { firebaseDb } from '../firebase/index.js'
-import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, Route, Switch  } from 'react-router-dom';
+//import ReactDOM from 'react-dom';
+//import { BrowserRouter as Router, Route, Switch  } from 'react-router-dom';
 import useReactRouter from 'use-react-router'
 
 export const BbsCreate = (props) => {
@@ -55,8 +54,8 @@ const BbsLine = (props) => {
 }
 
 export const BbsThread = () => {
-    const { history, location, match  } = useReactRouter();
     const [ bbs , setBbs ] = useState( {} );
+    const { history, location, match  } = useReactRouter();
 
     useEffect( ()=> {
         var orderRef = firebaseDb.ref('bbs' )
