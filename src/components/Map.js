@@ -41,9 +41,8 @@ const SimpleMap2 = (props) => {
 const enhance = _.identity;
 
 
-class ReactGoogleMaps extends React.Component {
-        
-    render(){
+const ReactGoogleMaps = () => {
+    
         return (
             [
                 <GitHubForkRibbon
@@ -62,7 +61,6 @@ class ReactGoogleMaps extends React.Component {
                 <MessageCreate />,
             ]
         );
-    }
 }
 
 export default enhance(ReactGoogleMaps);

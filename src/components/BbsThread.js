@@ -3,9 +3,8 @@ import { Button , Alert , Badge , Form } from 'react-bootstrap';
 import firebase from 'firebase';
 import firebaseui from 'firebaseui';
 import { firebaseDb } from '../firebase/index.js'
-//import ReactDOM from 'react-dom';
-//import { BrowserRouter as Router, Route, Switch  } from 'react-router-dom';
-import useReactRouter from 'use-react-router'
+import ReactDOM from 'react-dom';
+import { BrowserRouter as Router, Route, Switch  } from 'react-router-dom';
 
 export const BbsCreate = (props) => {
     const [ name , setName ] = useState( "Anonymous Thread"),
@@ -45,17 +44,31 @@ const BbsLine = (props) => {
         <tr>
             <td>{props.hash.name}</td>
             <td>{props.key}</td>
-            {/*            <td><Button onClick={()=>{
-                //   history.push('/messages')
-                //            }}>確認する</Button></td>
-                */}
+            {<td>
+                <a class="btn btn-primary" href="#" role="button">Link</a>
+                </td>
+                }
         </tr>
     ); 
 }
 
+// やはり useReactRouter はうまく動かなかった
+    /* 
+function HelloReact() {
+    const { history, location, match  } = useReactRouter();
+    return (
+        <div>
+            <h1>HelloReact</h1>
+            <p>{`pathname: ${location.pathname}`}</p>
+            <button onClick={() => history.push('/')}>Next</button>
+        </div>
+    );
+}
+*/
+
+
 export const BbsThread = () => {
     const [ bbs , setBbs ] = useState( {} );
-    const { history, location, match  } = useReactRouter();
 
     useEffect( ()=> {
         var orderRef = firebaseDb.ref('bbs' )

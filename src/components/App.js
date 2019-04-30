@@ -73,9 +73,9 @@ class PostList extends React.Component {
                 <Route path="/checkin/:id" component={CheckIn} />
                 <Route path="/userlist" component={UserList} />
                 <Route path="/map" component={Map} />
+                <Route path="/onethread/:id" component={Map} />
                 <Route path="/shopinfo/:id" component={ShopInfo} />
                 <Route path="/custominfo/:id" component={CustomInfo} />
-                
                 <Route path="/mypage/:id" 
                     render={props => <MyPage onTextChange={this.onTextChange} 
                         onButtonClick={this.onButtonClick}
