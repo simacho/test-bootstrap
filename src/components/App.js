@@ -9,6 +9,8 @@ import { UserList } from './UserList';
 import { CheckIn } from './CheckIn';
 import { ShopInfo } from './ShopInfo';
 import { CustomInfo } from './CustomInfo';
+import { BbsMessageTop } from './BbsMessage';
+import { BbsThreadTop } from './BbsThread';
 import Map from './Map';
 
 const messagesRef = firebaseDb.ref('messages')
@@ -72,8 +74,8 @@ class PostList extends React.Component {
                 <Route exact path="/login" component={LoginPage} />
                 <Route path="/checkin/:id" component={CheckIn} />
                 <Route path="/userlist" component={UserList} />
-                <Route path="/map" component={Map} />
-                <Route path="/onethread/:id" component={Map} />
+                <Route path="/bbsthread" component={BbsThreadTop} />
+                <Route path="/bbsmessage/:id/" component={BbsMessageTop} />
                 <Route path="/shopinfo/:id" component={ShopInfo} />
                 <Route path="/custominfo/:id" component={CustomInfo} />
                 <Route path="/mypage/:id" 

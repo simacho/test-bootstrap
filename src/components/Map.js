@@ -56,9 +56,6 @@ const ReactGoogleMaps = () => {
                 </GitHubForkRibbon>,
                 <p> Version {React.version} </p>,
                 <SimpleMap2 />,
-                <BbsThread />,
-                <BbsCreate lat="30" lng="30" />,
-                <MessageCreate />,
             ]
         );
 }

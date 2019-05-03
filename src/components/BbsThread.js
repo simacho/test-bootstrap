@@ -5,6 +5,7 @@ import firebaseui from 'firebaseui';
 import { firebaseDb } from '../firebase/index.js'
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route, Switch  } from 'react-router-dom';
+import Map from './Map';
 
 export const BbsCreate = (props) => {
     const [ name , setName ] = useState( "Anonymous Thread"),
@@ -40,19 +41,21 @@ export const BbsCreate = (props) => {
 
 // スレッドリストの表示 
 const BbsLine = (props) => {
+    let address = "/bbsmessage/" + props.hashkey;
+    console.log( address );
+
     return (
         <tr>
             <td>{props.hash.name}</td>
-            <td>{props.key}</td>
-            {<td>
-                <a class="btn btn-primary" href="#" role="button">Link</a>
+            <td>{props.hashkey}</td>
+            <td>
+                <a class="btn btn-primary" href={address} role="button">Link</a>
                 </td>
-                }
         </tr>
     ); 
 }
 
-// やはり useReactRouter はうまく動かなかった
+// useReactRouter はうまく動かなかった
     /* 
 function HelloReact() {
     const { history, location, match  } = useReactRouter();
@@ -85,7 +88,7 @@ export const BbsThread = () => {
             <table class="table table-hover">
                 {
                     keys ? keys.map(data => {
-                        return <BbsLine key={data} hash={bbs[data]} />
+                        return <BbsLine hashkey={data} hash={bbs[data]} />
                     }) : "Nothing Data"
                 }
             </table>
@@ -94,3 +97,13 @@ export const BbsThread = () => {
 }
 
 
+export const BbsThreadTop = (props) => {
+    return (
+        [
+            <Map />,
+            <BbsThread props={props} />,
+            <BbsCreate lat="30" lng="30" />,
+        ]
+    );
+
+}

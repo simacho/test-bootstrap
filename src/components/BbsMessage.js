@@ -4,6 +4,7 @@ import { Button , Alert , Badge , Form } from 'react-bootstrap';
 import firebase from 'firebase';
 import firebaseui from 'firebaseui';
 import { firebaseDb } from '../firebase/index.js'
+import Map from './Map';
 
 export const MessageCreate = (props) => {
     const [ name , setName ] = useState( "Anonymous message"),
@@ -12,8 +13,8 @@ export const MessageCreate = (props) => {
 
     const WriteMsg = () => {
         var create_time = (new Date()).toString();
-        var address = 'msg/' + props.thread;
-        firebaseDb.ref('msg').push({
+        var address = 'msg/' + props.address;
+        firebaseDb.ref(address).push({
             "name" : name,
             "create_time" : create_time,
             "msg" : msg,
@@ -23,7 +24,7 @@ export const MessageCreate = (props) => {
 
     return (
         <div>
-            <Form onSubmit={MessageCreate} >
+            <Form onSubmit={WriteMsg} >
                 <Form.Group controlId="exampleForm.ControlTextarea1">
                     <Form.Label>Example textarea</Form.Label>
                     <Form.Control as="textarea" rows="3"
@@ -39,33 +40,36 @@ export const MessageCreate = (props) => {
 
 // 個別のメッセージ
 const MessageLine = (props) => {
+    console.log(props);
+
     return (
         <tr>
-            <td>hoge</td>
+            <td>{props.hash.name}</td>
+            <td>{props.hash.msg}</td>
         </tr>
     ); 
 }
 
 export const BbsMessage = (props) => {
     const [ msgs , setMsgs ] = useState( {} );
-    var address = 'msg/' + props.thread;
+    var address = 'msg/' + props.address;
 
     useEffect( ()=> {
         var orderRef = firebaseDb.ref(address)
         orderRef.on("value", (snap) => {
             setMsgs( snap.val() );
         })        
-    },[msgs] )
+    },[] )
 
     if (msgs == null ) return "MESSAGE none";
-    let hash = Object.keys([address]);
+    let keys = Object.keys(msgs);
 
     return (
         <div>
             <table class="table">
                 {
-                    hash ? hash.map(data => {
-                        return <MessageLine hash={hash[data]} />
+                    keys ? keys.map(data => {
+                        return <MessageLine hash={msgs[data]} />
                     }) : "Nothing Data"
                 }
             </table>
@@ -73,4 +77,14 @@ export const BbsMessage = (props) => {
     );
 }
 
+export const BbsMessageTop = (props) => {
+    let address = props.match.params.id;
+    return (
+        [
+            <Map />,
+            <BbsMessage address={address} />,
+            <MessageCreate address={address} />,
+        ]
+    );
 
+}
