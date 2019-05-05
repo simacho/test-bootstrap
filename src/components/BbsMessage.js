@@ -5,26 +5,28 @@ import firebase from 'firebase';
 import firebaseui from 'firebaseui';
 import { firebaseDb } from '../firebase/index.js'
 import Map from './Map';
+import * as util from './Util.js';
 
 export const MessageCreate = (props) => {
     const [ name , setName ] = useState( "Anonymous message"),
         [ msg , setMsg ] = useState( "" ),
         [ create_time , setCreateTime ] = useState( "" );
 
-    const WriteMsg = () => {
-        var create_time = (new Date()).toString();
+    const WriteMsg = (e:InputEvent) => {
+        var create_time = (new Date());
         var address = 'msg/' + props.address;
         firebaseDb.ref(address).push({
             "name" : name,
             "create_time" : create_time,
             "msg" : msg,
         })
-        console.log("messageCreate")
+        console.log(e)
+        e.preventDefault();
     }
 
     return (
         <div>
-            <Form onSubmit={WriteMsg} >
+            <Form onSubmit={(e)=>WriteMsg(e)} >
                 <Form.Group controlId="exampleForm.ControlTextarea1">
                     <Form.Label>Example textarea</Form.Label>
                     <Form.Control as="textarea" rows="3"
@@ -38,14 +40,17 @@ export const MessageCreate = (props) => {
     );
 }
 
+
+
 // 個別のメッセージ
 const MessageLine = (props) => {
-    console.log(props);
+    //let msg = props.hash.msg.replace(/\r?\n/g,'<br />');
 
     return (
         <tr>
             <td>{props.hash.name}</td>
-            <td>{props.hash.msg}</td>
+            <td><util.NewLineToBr>{props.hash.msg}</util.NewLineToBr></td>
+            <td>{props.hash.create_time}</td>
         </tr>
     ); 
 }
