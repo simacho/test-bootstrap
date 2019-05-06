@@ -13,7 +13,7 @@ export const MessageCreate = (props) => {
         [ create_time , setCreateTime ] = useState( "" );
 
     const WriteMsg = (e:InputEvent) => {
-        var create_time = (new Date());
+        var create_time = (new Date()).getTime();
         var address = 'msg/' + props.address;
         firebaseDb.ref(address).push({
             "name" : name,
@@ -30,7 +30,7 @@ export const MessageCreate = (props) => {
                 <Form.Group controlId="exampleForm.ControlTextarea1">
                     <Form.Label>Example textarea</Form.Label>
                     <Form.Control as="textarea" rows="3"
-                        onChange={(e)=>{ setMsg( e.target.value ); console.log(e.target.value);} } />
+                        onChange={(e)=>{ setMsg( e.target.value ); /*console.log(e.target.value);*/ } } />
                 </Form.Group>
             <Button variant="primary" type="submit" >
                 作成する
@@ -50,7 +50,8 @@ const MessageLine = (props) => {
         <tr>
             <td>{props.hash.name}</td>
             <td><util.NewLineToBr>{props.hash.msg}</util.NewLineToBr></td>
-            <td>{props.hash.create_time}</td>
+            <td class="text-right"><small>{util.Datelong2Format(props.hash.create_time)}</small></td>
+            <td><i class="fas fa-edit"></i><i class="fas fa-trash-alt"></i></td>
         </tr>
     ); 
 }
