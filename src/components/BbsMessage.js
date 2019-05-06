@@ -8,7 +8,8 @@ import Map from './Map';
 import * as util from './Util.js';
 
 export const MessageCreate = (props) => {
-    const [ name , setName ] = useState( "Anonymous message"),
+    const [ name , setName ] = useState( props.name ),
+        [ icon_url , setIconUrl ] = useState( "" ),
         [ msg , setMsg ] = useState( "" ),
         [ create_time , setCreateTime ] = useState( "" );
 
@@ -17,6 +18,7 @@ export const MessageCreate = (props) => {
         var address = 'msg/' + props.address;
         firebaseDb.ref(address).push({
             "name" : name,
+            "icon_url" : icon_url,
             "create_time" : create_time,
             "msg" : msg,
         })
@@ -39,6 +41,7 @@ export const MessageCreate = (props) => {
     </div>
     );
 }
+
 
 
 
