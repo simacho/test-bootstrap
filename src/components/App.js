@@ -3,7 +3,7 @@ import { firebaseDb } from '../firebase/index.js'
 import firebase from 'firebase';
 import firebaseui from 'firebaseui';
 import { BrowserRouter, Route, Link, Redirect } from 'react-router-dom'
-import { MyPage } from './MyPage';
+import { MyPageDisplayInfo } from './MyPage';
 import { LoginPage } from './LoginPage';
 import { UserList } from './UserList';
 import { CheckIn } from './CheckIn';
@@ -78,12 +78,13 @@ class PostList extends React.Component {
                 <Route path="/bbsmessage/:id/" component={BbsMessageTop} />
                 <Route path="/shopinfo/:id" component={ShopInfo} />
                 <Route path="/custominfo/:id" component={CustomInfo} />
-                <Route path="/mypage/:id" 
+                <Route path="/mypage" component={MyPageDisplayInfo} /> 
+                {/*                <Route path="/mypage/:id" 
                     render={props => <MyPage onTextChange={this.onTextChange} 
                         onButtonClick={this.onButtonClick}
                         onSubmit={this.onSubmit}
                     />}
-                />
+                />*/}
             </div>
         </BrowserRouter>
         );

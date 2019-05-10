@@ -12,6 +12,7 @@ export class LoginPage extends React.Component {
         const uiConfig = {
             callbacks: {
                 signInSuccessWithAuthResult: (authResult, redirectUrl) => {
+                    console.log("Success Login");
                     return true;
                 },
                 uiShown: () => {
@@ -38,4 +39,6 @@ export class LoginPage extends React.Component {
         );
     }
 }
+
+
 
