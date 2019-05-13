@@ -33,9 +33,8 @@ export let MyPageDisplayInfo = () => {
 
     return (
         <div>
-            MyPage
             <tr>
-                <td> <img src={photoURL} width="64" height="64"/></td>
+                <td> <img src={photoURL} width="48" height="48"/></td>
                 <td> {displayName} </td>
                 <td> {email} </td>
                 <td> {uid} </td>
