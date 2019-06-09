@@ -11,6 +11,7 @@ import { ShopInfo } from './ShopInfo';
 import { CustomInfo } from './CustomInfo';
 import { BbsMessageTop } from './BbsMessage';
 import { BbsThreadTop } from './BbsThread';
+import { AuthProvider , AuthContext } from './Auth';
 import Map from './Map';
 
 const messagesRef = firebaseDb.ref('messages')
@@ -66,6 +67,7 @@ class PostList extends React.Component {
 
     render() {
         return(
+            <AuthProvider>
             <BrowserRouter>
             <div>
                 <Route exact path="/" render={()=> (
@@ -87,6 +89,7 @@ class PostList extends React.Component {
                 />*/}
             </div>
         </BrowserRouter>
+    </AuthProvider>
         );
     }
 
