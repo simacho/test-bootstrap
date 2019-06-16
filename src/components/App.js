@@ -1,7 +1,4 @@
-import React, { Component } from 'react';
-import { firebaseDb } from '../firebase/index.js'
-import firebase from 'firebase';
-import firebaseui from 'firebaseui';
+import React, { useState, useContext, useEffect, useCallback } from 'react'
 import { BrowserRouter, Route, Link, Redirect } from 'react-router-dom'
 import { MyPageDisplayInfo } from './MyPage';
 import { LoginPage } from './LoginPage';
@@ -12,67 +9,16 @@ import { CustomInfo } from './CustomInfo';
 import { BbsMessageTop } from './BbsMessage';
 import { BbsThreadTop } from './BbsThread';
 import { AuthProvider , AuthContext } from './Auth';
-import Map from './Map';
 
-const messagesRef = firebaseDb.ref('messages')
-
-class App extends React.Component {
-    render(){
-        return (
-            <PostList />
-        );
-    }
-}
-
-/*
-const PrivateRoute = ({ component: Component, ...rest}) => (
-    <Route {...rest}
-        render={props => fakeAuth.isAuthenticated ? ( <Component {...props} /> ) : (
-            <Redirect to={{ 
-                pathname: "/login", state: { from: props.location }
-            }} />
-        )
-        }
-    />
-);
-*/
-
-class PostList extends React.Component {
-    constructor(props) {
-        super(props);
-        this.onTextChange = this.onTextChange.bind(this)
-        this.onButtonClick = this.onButtonClick.bind(this)
-        this.onSubmit = this.onSubmit.bind(this)
-        this.state = {
-            name: "",
-            email: "",
-            password: ""
-        }
-    }
-
-/*
-    componentWillMount() {
-        this.checkAuthentication(this.props);
-    }
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.location !== this.props.location) {
-            this.checkAuthentication(nextProps);
-        }
-    }
-*/
-
-    loggedIn() {
-        return true
-    }
-
-    render() {
-        return(
-            <AuthProvider>
+export default () => {
+    return (
+        <AuthProvider>
             <BrowserRouter>
-            <div>
-                <Route exact path="/" render={()=> (
-                    this.loggedIn() ? <Redirect to="/dashboard"/> : <Home/>
-                )}/>
+                <div>
+                    {/*    <Route exact path="/" render={()=> {
+                        auth.currentUser ? <Redirect to ="/dashboard" /> : <Home />
+    )}}/> */}
+                <Route exact path="/" component={Home} />
                 <Route exact path="/login" component={LoginPage} />
                 <Route path="/checkin/:id" component={CheckIn} />
                 <Route path="/userlist" component={UserList} />
@@ -81,59 +27,20 @@ class PostList extends React.Component {
                 <Route path="/shopinfo/:id" component={ShopInfo} />
                 <Route path="/custominfo/:id" component={CustomInfo} />
                 <Route path="/mypage" component={MyPageDisplayInfo} /> 
-                {/*                <Route path="/mypage/:id" 
-                    render={props => <MyPage onTextChange={this.onTextChange} 
-                        onButtonClick={this.onButtonClick}
-                        onSubmit={this.onSubmit}
-                    />}
-                />*/}
             </div>
         </BrowserRouter>
     </AuthProvider>
-        );
-    }
-
-    /* render={()=> ( this.loggedIn() ? ( <Redirect t
-     * render = { ()=> (this.loggedIn() ? (<Home/>) : (<Hoge/>)) } />
-     */
-
-    onTextChange(e) {
-        if (e.target.name === "email" ){
-            this.setState({
-                "email": e.target.value,
-            });
-        } else if (e.target.name === "password"){
-            this.setState({
-                "password": e.target.value,
-            });
-        } else if (e.target.name === "name"){
-            this.setState({
-                "name": e.target.value,
-            });
-        }
-        console.log(this.state)
-    }
-
-    onButtonClick(){
-    }
-
-    onSubmit(){
-        messagesRef.push({
-            "name" : this.state.name,
-            "email" : this.state.email,
-            "password" : this.state.password,
-        })
-        console.log(this.state)
-    }
+    );
 }
 
-
-const Home = () => (
+const Home = () => { 
+    const auth = useContext(AuthContext)
+    return (
     <div>
-        hoge
+        { auth.currentUser ? "hoge" : "fuga" }
     </div>
-)
+    );
+}
 
-export default App;
 
 
