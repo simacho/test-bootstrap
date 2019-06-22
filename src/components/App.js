@@ -8,7 +8,7 @@ import { BbsMessageTop } from './BbsMessage';
 import { BbsThreadTop } from './BbsThread';
 import { AuthProvider , AuthContext } from './Auth';
 import { MyPageDisplayInfo } from './MyPage'
-import { LoginPage } from './LoginPage'
+import { LoginPage, LoginPage2 } from './LoginPage'
 
 export default () => {
     return (
@@ -23,9 +23,12 @@ export default () => {
 const LoginRoute = () => {
     const auth = useContext(AuthContext)
 
-    if ( auth.currentUser == true ){
+    console.log(auth)
+
+    if ( auth.currentUser ){
         return (
             <div>
+                logined page
                 <Route exact path="/" component={Home} />
                 <Route path="/checkin/:id" component={CheckIn} />
                 <Route path="/userlist" component={UserList} />
@@ -39,7 +42,8 @@ const LoginRoute = () => {
     } else {
         return (
             <div>
-                <Route path="/" component={LoginPage} />
+                unlogined page
+                <Route path="/" component={LoginPage2} />
             </div>
         )
     }

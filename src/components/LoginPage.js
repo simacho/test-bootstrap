@@ -1,7 +1,8 @@
-import React, { Component } from 'react';
+import React, { Component , useEffect , useContext } from 'react';
 import firebase from 'firebase';
 import firebaseui from 'firebaseui';
 import { firebaseDb } from '../firebase/index.js'
+import { AuthProvider , AuthContext } from './Auth';
 
 export class LoginPage extends React.Component {
     componentDidMount() {
@@ -40,5 +41,16 @@ export class LoginPage extends React.Component {
     }
 }
 
+export const LoginPage2 = ()=> {
+    const auth = useContext(AuthContext)
+    useEffect( ()=> {
+        auth.signup_ui()
+    },[] )
+
+    return (
+        <div>
+        </div>
+    )
+}
 
 

@@ -85,6 +85,7 @@ export const BbsThread = () => {
 
     return (
         <div>
+            bbsthread
             <table class="table table-hover">
                 {
                     keys ? keys.map(data => {
@@ -100,7 +101,6 @@ export const BbsThread = () => {
 export const BbsThreadTop = (props) => {
     return (
         [
-            <Map />,
             <BbsThread props={props} />,
             <BbsCreate lat="30" lng="30" />,
         ]

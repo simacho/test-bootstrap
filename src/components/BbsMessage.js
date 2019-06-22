@@ -90,7 +90,6 @@ export const BbsMessageTop = (props) => {
     let address = props.match.params.id;
     return (
         [
-            <Map />,
             <BbsMessage address={address} />,
             <MessageCreate address={address} />,
         ]
