@@ -3,7 +3,6 @@ import firebase from 'firebase'
 import firebaseui from 'firebaseui'
 
 const AuthContext = createContext()
-const uiInstance = firebaseui.auth.AuthUI(firebase.auth()) 
 
 const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true)
@@ -38,6 +37,8 @@ const AuthProvider = ({ children }) => {
     }, [])
 
     const signup_ui = useCallback(async () => {
+        var uiInstance = new firebaseui.auth.AuthUI(firebase.auth()) 
+        
         const uiConfig = {
             callbacks: {
                 signInSuccessWithAuthResult: (authResult, redirectUrl) => {
@@ -59,7 +60,7 @@ const AuthProvider = ({ children }) => {
 
         try {
             setLoading(true)
-            await uiInstance.start('#firebaseui-auth-container', uiConfig);
+            uiInstance.start('#firebaseui-auth-container', uiConfig);
         } catch (e) {
             console.error(e.code, e.message)
         }
@@ -69,7 +70,7 @@ const AuthProvider = ({ children }) => {
         firebase.auth().onAuthStateChanged(user => {
             setLoading(false)
             setCurrentUser(user)
-            console.log( user )
+            // console.log( user )
         })
     }, [])
 
