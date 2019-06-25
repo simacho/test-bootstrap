@@ -33,7 +33,7 @@ const LoginRoute = () => {
                 <Route exact path="/" component={Home} />
                 <Route path="/checkin/:id" component={CheckIn} />
                 <Route path="/userlist" component={UserList} />
-                <Route path="/vertex" component={VertexTop} />
+                <Route path="/vertex/:address" component={VertexTop} />
                 <Route path="/bbsthread" component={BbsThreadTop} />
                 <Route path="/bbsmessage/:id/" component={BbsMessageTop} />
                 <Route path="/shopinfo/:id" component={ShopInfo} />

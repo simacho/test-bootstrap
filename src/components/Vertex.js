@@ -8,12 +8,13 @@ import * as util from './Util.js';
 
 const VertexCreate = (props) => {
     const [ name , setName ] = useState( "" )
-    const [ address , setAddress ] = useState( props.address )
+    const [ address , setAddress ] = useState( "" )
 
-    const Add = (e:InputEvent,props) => {
+    const Add = (e:InputEvent) => {
         var create_time = (new Date()).getTime();
-        console.log(address)
-        firebaseDb.ref(address).push({
+        var path = props.address + '/' + name 
+        console.log(path)
+        firebaseDb.ref(path).push({
             "name" : name,
             "create_time" : create_time,
         })
@@ -23,9 +24,9 @@ const VertexCreate = (props) => {
 
     return (
         <div>
-            <Form onSubmit={Add} >
+            <Form onSubmit={(e)=>Add(e)} >
                 <Form.Group controlId="formDisplayName">
-                    <Form.Label>スレッド名</Form.Label>
+                    <Form.Label>頂点名</Form.Label>
                     <Form.Control name="name" type="text"
                         placeholder="新しいノードの作成"
                         onChange={(e)=>{ setName( e.target.value ); console.log(e.target.value);} } />
@@ -90,7 +91,8 @@ export const Vertex = (props) => {
 }
 
 export const VertexTop = (props) => {
-    let address = props.match.params.id;
+    let address = props.match.params.address;
+    console.log( address )
     return (
         [
             <VertexCreate address={address} />,
