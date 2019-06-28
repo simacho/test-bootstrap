@@ -46,12 +46,13 @@ const Vertex = (crnt,vtx) => {
     return (
         <div>
             <tr>
-                <td>{vtx.name}</td>
+                <td>{"name" in vtx ? vtx.name : ""}</td>
             </tr>
             {
+                "sons" in vtx ? 
                 vtx.sons.map( sn => {
                     return <Vertex crnt={adrs} vtx={sn} />
-                })
+                }) : ""
             }
         </div>
     ) 
