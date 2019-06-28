@@ -9,7 +9,7 @@ import { BbsThreadTop } from './BbsThread';
 import { AuthProvider , AuthContext } from './Auth';
 import { MyPageDisplayInfo } from './MyPage'
 import { LoginPage, LoginPage2 } from './LoginPage'
-import { VertexTop } from './Vertex'
+import { VertexTop , VertexRoot } from './Vertex'
 
 export default () => {
     return (
@@ -33,7 +33,7 @@ const LoginRoute = () => {
                 <Route exact path="/" component={Home} />
                 <Route path="/checkin/:id" component={CheckIn} />
                 <Route path="/userlist" component={UserList} />
-                <Route path="/vertex/:address" component={VertexTop} />
+                <Route path="/vertex/:address" component={VertexRoot} />
                 <Route path="/bbsthread" component={BbsThreadTop} />
                 <Route path="/bbsmessage/:id/" component={BbsMessageTop} />
                 <Route path="/shopinfo/:id" component={ShopInfo} />

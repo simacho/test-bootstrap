@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { useState , useEffect } from "react";
+import { useState , useEffect ,useCallback } from "react";
 import { Button , Alert , Badge , Form } from 'react-bootstrap';
 import firebase from 'firebase';
 import firebaseui from 'firebaseui';
@@ -9,6 +9,7 @@ import * as util from './Util.js';
 const VertexCreate = (props) => {
     const [ name , setName ] = useState( "" )
     const [ address , setAddress ] = useState( "" )
+    const [ info , setInfo ] = useState( {} )
 
     const Add = (e:InputEvent) => {
         var create_time = (new Date()).getTime();
@@ -39,55 +40,47 @@ const VertexCreate = (props) => {
     );
 }
 
-
-// 個別のメッセージ
-const VertexInfo = (props) => {
-        return (
+// ノード毎の処理
+const Vertex = (crnt,vtx) => {
+    let adrs = crnt + '/' + vtx.name
+    return (
+        <div>
             <tr>
-                <td>{props.hash.name}</td>
-                <td><util.NewLineToBr>{props.hash.msg}</util.NewLineToBr></td>
-                <td class="text-right"><small>{util.Datelong2Format(props.hash.create_time)}</small></td>
-                <td><i class="fas fa-edit"></i><i class="fas fa-trash-alt"></i></td>
+                <td>{vtx.name}</td>
             </tr>
-        ); 
+            {
+                vtx.sons.map( sn => {
+                    return <Vertex crnt={adrs} vtx={sn} />
+                })
+            }
+        </div>
+    ) 
 }
 
 
-/* Root -> Top -> Vertexs
-                -> Info
-                -> Users
-                -> Msgs
-                -> Sons
-                */
-export const Vertex = (props) => {
-    const [ nd , setNd ] = useState( {} );
+export const VertexRoot = (props) => {
+    const [ name , setName ] = useState( "" )
+    const [ address , setAddress ] = useState( props.match.params.address )
+    const [ vtx , setVtx ] = useState( {} )
 
-    useEffect( ()=> {
-        var orderRef = firebaseDb.ref(props.address)
-        orderRef.on("value", (snap) => {
-            setNd( snap.val() );
-        })        
+    // ノード情報の読み込み
+    useEffect(async () => {
+        try {
+            await firebaseDb.ref(address).on('value', snap => {
+                setVtx( snap.val() )
+                console.log( "vertex read" )
+            })
+        } catch (e) {
+            console.error(e.code, e.message)
+        }
     },[] )
 
-    if (nd == null ) return "Vertex none";
-    let keys = Object.keys(nd);
     return (
         <div>
-            <VertexInfo props={nd.info} />
-            {/*
-            <VertexUsers props={keys.users} />
-            <VertexMsgs props={keys.msgs} />
-            <VertexSons props={keys.sons} />
-            <table class="table">
-                {
-                    keys ? keys.map(data => {
-                        return <VertexLine hash={msgs[data]} />
-                    }) : "Nothing Data"
-                }
-            </table>
-            */}
+            <Vertex crnt={address} vtx={vtx}/>
         </div>
-    );
+    )
+
 }
 
 export const VertexTop = (props) => {
