@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { useState , useEffect ,useCallback } from "react";
+import { useState , useEffect ,useCallback , useMemo } from "react";
 import { Button , Alert , Badge , Form } from 'react-bootstrap';
 import firebase from 'firebase';
 import firebaseui from 'firebaseui';
@@ -41,18 +41,21 @@ const VertexCreate = (props) => {
 }
 
 // ノード毎の処理
-const Vertex = (crnt,vtx) => {
-    let adrs = crnt + '/' + vtx.name
+const Vertex = (props) => {
+    let adrs = props.crnt + '/' + props.vtx.name
+    console.log(props)
     return (
         <div>
             <tr>
-                <td>{"name" in vtx ? vtx.name : ""}</td>
+                <td>{props.crnt}</td>
+                <td>{"name" in props.vtx ? props.vtx.name : ""}</td>
             </tr>
             {
-                "sons" in vtx ? 
-                vtx.sons.map( sn => {
-                    return <Vertex crnt={adrs} vtx={sn} />
-                }) : ""
+                
+                "son" in props.vtx ? 
+                    Object.keys(props.vtx.son).map( sn => {
+                        return <Vertex crnt={props.crnt} vtx={props.vtx.son[sn]} />
+                    }) : ""
             }
         </div>
     ) 
@@ -65,20 +68,28 @@ export const VertexRoot = (props) => {
     const [ vtx , setVtx ] = useState( {} )
 
     // ノード情報の読み込み
-    useEffect(async () => {
+    useEffect(() => {
         try {
-            await firebaseDb.ref(address).on('value', snap => {
+            firebaseDb.ref('name').on('value', snap => {
                 setVtx( snap.val() )
-                console.log( "vertex read" )
+                // console.log(Object.keys(snap.val()))
             })
         } catch (e) {
             console.error(e.code, e.message)
         }
     },[] )
 
+    if (vtx == null ) return "Vertex ReadErr";
+    let keys = Object.keys(vtx);
+
     return (
         <div>
-            <Vertex crnt={address} vtx={vtx}/>
+            <table class="table">
+                {
+                    'vtx0' in vtx ? <Vertex crnt='name/vtx0' vtx={vtx['vtx0']} /> :
+                        "Nothing Root Vertex"
+                }
+            </table>
         </div>
     )
 
