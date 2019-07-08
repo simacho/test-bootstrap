@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { createContext, useState , useEffect ,useCallback , useMemo } from "react";
+import { useContext, createContext, useState , useEffect ,useCallback , useMemo } from "react";
 import { Button , Alert , Badge , Form , ListGroup } from 'react-bootstrap';
 import firebase from 'firebase';
 import firebaseui from 'firebaseui';
@@ -44,46 +44,31 @@ const VertexCreate = (props) => {
 
 
 
-//  ノードツリー部分の描画処理
-const VertexDisp = (props) => {
-
-    const toggle = () => {
-        if ( props.vtx.collapse === null ) props.vtx.collapse = true
-        props.vtx.collapse = !props.vtx.collapse
-        console.log("toggle called " + props.vtx.collapse)
-    }
-
-
-    return (
-        <ListGroup.Item action onClick={toggle}>
-            {props.vtx.collapse ? 
-                <i class="fas fa-plus-square"></i> : <i class="fas fa-minus-square"></i>  }
-            {"name" in props.vtx ? props.vtx.name : ""}
-        </ListGroup.Item>
-        // collapse button
-        // information name
-    )
-    /*
-    return (
-    <tr>
-        <td><i class="fas fa-plus-square"></i></td>
-        <td>
-            {"name" in props.vtx ? props.vtx.name : ""}
-        </td>
-        <td><i class="fas fa-edit"></i><i class="fas fa-trash-alt"></i></td>
-        // collapse button
-        // information name
-    </tr>
-    )
-    */
-}
-
 // ノードツリー
 const VertexTree = (props) => {
+    const [ collapse , setCollapse ] = useState( false )
     let adrs = props.crnt + '/' + props.vtx.name
     let do_son = false;
 
-    if ( "son" in props.vtx && !("collapse" in props.vtx)) do_son = true;
+    // トグルボタン
+    const toggle = () => {
+        setCollapse( prev => { return !prev } ) 
+    }
+
+    //  ノードツリー部分の描画処理
+    const VertexDisp = (props) => {
+        return (
+            <ListGroup.Item action onClick={toggle}>
+                {collapse ? 
+                    <i class="fas fa-plus-square"></i> : <i class="fas fa-minus-square"></i>  }
+                    {"name" in props.vtx ? props.vtx.name : ""}
+                </ListGroup.Item>
+            // collapse button
+            // information name
+        )
+    }
+
+    if ( "son" in props.vtx && collapse == false ) do_son = true;
 
     console.log(props)
     return (
@@ -114,6 +99,7 @@ export const VertexRoot = (props) => {
             firebaseDb.ref('name').on('value', snap => {
                 setVtx( snap.val() )
                 // console.log(Object.keys(snap.val()))
+                // setWork( hoge => ({ ...hoge, "kora" : "pro"      }) )
             })
         } catch (e) {
             console.error(e.code, e.message)
@@ -123,9 +109,12 @@ export const VertexRoot = (props) => {
     if (vtx == null ) return "Vertex ReadErr";
     let keys = Object.keys(vtx);
 
+
     return (
         <div>
-            <VertexContext.Provider value={{ crnt }}>
+            <VertexContext.Provider value={
+                { vtx , setVtx , crnt , setCrnt }
+            }>
                 <table class="table">
                     {
                         'vtx0' in vtx ? <VertexTree crnt='name/vtx0' vtx={vtx['vtx0']} /> :
