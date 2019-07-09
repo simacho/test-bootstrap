@@ -43,22 +43,30 @@ const VertexCreate = (props) => {
 }
 
 
-
 // ノードツリー
 const VertexTree = (props) => {
     const [ collapse , setCollapse ] = useState( false )
     let adrs = props.crnt + '/' + props.vtx.name
-    let do_son = false;
+    let do_son = false; 
+    let depth = parseInt(props.depth)
+    const ctxt = useContext(VertexContext)
 
-    // トグルボタン
+    // collapseトグルボタン
     const toggle = () => {
+        if ( !("son" in props.vtx) ) return
         setCollapse( prev => { return !prev } ) 
+    }
+
+    // カレントに設定する
+    const setcrnt = () => {
+        ctxt.setCrnt( adrs )
     }
 
     //  ノードツリー部分の描画処理
     const VertexDisp = (props) => {
         return (
-            <ListGroup.Item action onClick={toggle}>
+            <ListGroup.Item action onClick={toggle , setcrnt}>
+                {'---'.repeat(depth)}
                 {collapse ? 
                     <i class="fas fa-plus-square"></i> : <i class="fas fa-minus-square"></i>  }
                     {"name" in props.vtx ? props.vtx.name : ""}
@@ -70,7 +78,6 @@ const VertexTree = (props) => {
 
     if ( "son" in props.vtx && collapse == false ) do_son = true;
 
-    console.log(props)
     return (
         <div>
             <ListGroup as="ul">
@@ -79,7 +86,7 @@ const VertexTree = (props) => {
             {
                 do_son ? 
                     Object.keys(props.vtx.son).map( sn => {
-                        return <VertexTree crnt={props.crnt} vtx={props.vtx.son[sn]} />
+                        return <VertexTree crnt={props.crnt} vtx={props.vtx.son[sn]} depth={depth+1} />
                     }) : ""
             }
         </div>
@@ -117,7 +124,7 @@ export const VertexRoot = (props) => {
             }>
                 <table class="table">
                     {
-                        'vtx0' in vtx ? <VertexTree crnt='name/vtx0' vtx={vtx['vtx0']} /> :
+                        'vtx0' in vtx ? <VertexTree crnt='name/vtx0' vtx={vtx['vtx0']} depth='0' /> :
                             "Nothing Root Vertex"
                     }
                 </table>
