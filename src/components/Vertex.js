@@ -43,11 +43,11 @@ const VertexCreate = (props) => {
 }
 
 
+
+
 // ノードツリー
 const VertexTree = (props) => {
     const [ collapse , setCollapse ] = useState( false )
-    let adrs = props.crnt + '/' + props.vtx.name
-    let do_son = false; 
     let depth = parseInt(props.depth)
     const ctxt = useContext(VertexContext)
 
@@ -59,34 +59,33 @@ const VertexTree = (props) => {
 
     // カレントに設定する
     const setcrnt = () => {
-        ctxt.setCrnt( adrs )
+        ctxt.setCrnt( props.crnt )
+        console.log( props.crnt + '->' + ctxt.crnt )
     }
+
 
     //  ノードツリー部分の描画処理
     const VertexDisp = (props) => {
         return (
-            <ListGroup.Item action onClick={toggle , setcrnt}>
-                {'---'.repeat(depth)}
-                {collapse ? 
-                    <i class="fas fa-plus-square"></i> : <i class="fas fa-minus-square"></i>  }
-                    {"name" in props.vtx ? props.vtx.name : ""}
-                </ListGroup.Item>
-            // collapse button
-            // information name
+            <ListGroup.Item
+                action onClick={setcrnt}
+                active ={ctxt.crnt == props.crnt ? true : false }
+            > {'---'.repeat(depth)} {collapse ?  <i class="fas fa-plus-square"></i> : <i class="fas fa-minus-square"></i>  }
+                {"name" in props.vtx ? props.vtx.name : ""}
+            </ListGroup.Item>
         )
     }
-
-    if ( "son" in props.vtx && collapse == false ) do_son = true;
 
     return (
         <div>
             <ListGroup as="ul">
-                <VertexDisp vtx={props.vtx} />
+                <VertexDisp vtx={props.vtx} crnt={props.crnt} />
             </ListGroup>
             {
-                do_son ? 
+                ( "son" in props.vtx && collapse == false ) ? 
                     Object.keys(props.vtx.son).map( sn => {
-                        return <VertexTree crnt={props.crnt} vtx={props.vtx.son[sn]} depth={depth+1} />
+                        let crnt = props.crnt + '/' + sn
+                        return <VertexTree crnt={crnt} vtx={props.vtx.son[sn]} depth={depth+1} />
                     }) : ""
             }
         </div>
@@ -118,18 +117,22 @@ export const VertexRoot = (props) => {
 
 
     return (
-        <div>
-            <VertexContext.Provider value={
-                { vtx , setVtx , crnt , setCrnt }
-            }>
-                <table class="table">
-                    {
-                        'vtx0' in vtx ? <VertexTree crnt='name/vtx0' vtx={vtx['vtx0']} depth='0' /> :
-                            "Nothing Root Vertex"
-                    }
-                </table>
-            </VertexContext.Provider>
+        <div class="container">
+            <div class="row">
+                <div class ="col-md-4">
+                    <VertexContext.Provider value={
+                        { vtx , setVtx , crnt , setCrnt }
+                    }>
+                    <table class="table">
+                        {
+                            'vtx0' in vtx ? <VertexTree crnt='name/vtx0' vtx={vtx['vtx0']} depth='0' /> :
+                                "Nothing Root Vertex"
+                        }
+                    </table>
+                </VertexContext.Provider>
+            </div>
         </div>
+    </div>
     )
 
 }
