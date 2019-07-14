@@ -49,9 +49,8 @@ export const LoginPage2 = ()=> {
 
     return (
         <div>
-            LoginPage2
-                <div id="firebaseui-auth-container" />
-                <div id="loader">Now Loading...</div>
+            <div id="firebaseui-auth-container" />
+            <div id="loader">Now Loading...</div>
         </div>
     )
 }

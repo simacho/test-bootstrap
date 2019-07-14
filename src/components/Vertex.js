@@ -4,6 +4,7 @@ import { Button , Alert , Badge , Form , ListGroup } from 'react-bootstrap';
 import firebase from 'firebase';
 import firebaseui from 'firebaseui';
 import { firebaseDb } from '../firebase/index.js'
+import { Sentence , SentenceContext } from './Sentence';
 import * as util from './Util.js';
 
 const VertexContext = createContext()
@@ -98,6 +99,7 @@ export const VertexRoot = (props) => {
     const [ address , setAddress ] = useState( props.match.params.address )
     const [ vtx , setVtx ] = useState( {} )
     const [ crnt , setCrnt ] = useState( "" )
+    const sctxt = useContext( SentenceContext )
 
     // ノード情報の読み込み
     useEffect(() => {
@@ -119,18 +121,23 @@ export const VertexRoot = (props) => {
     return (
         <div class="container">
             <div class="row">
-                <div class ="col-md-4">
-                    <VertexContext.Provider value={
-                        { vtx , setVtx , crnt , setCrnt }
-                    }>
-                    <table class="table">
-                        {
-                            'vtx0' in vtx ? <VertexTree crnt='name/vtx0' vtx={vtx['vtx0']} depth='0' /> :
-                                "Nothing Root Vertex"
-                        }
-                    </table>
-                </VertexContext.Provider>
-            </div>
+                    <div class ="col-md-4">
+                        <VertexContext.Provider value={
+                            { vtx , setVtx , crnt , setCrnt }
+                        }>
+                        <table class="table">
+                            {
+                                'vtx0' in vtx ? <VertexTree crnt='name/vtx0' vtx={vtx['vtx0']} depth='0' /> :
+                                    "Nothing Root Vertex"
+                            }
+                        </table>
+                    </VertexContext.Provider>
+                </div>
+                <div class="row">
+                    <div class ="col-md-4">
+                        <Sentence.Dummy />
+                    </div>
+                </div>
         </div>
     </div>
     )
