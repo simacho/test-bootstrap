@@ -6,6 +6,7 @@ import firebaseui from 'firebaseui';
 import { firebaseDb } from '../firebase/index.js'
 import { Sentence , SentenceContext } from './Sentence';
 import * as util from './Util.js';
+import { SntForm , SenView } from './SntView'
 
 const VertexContext = createContext()
 
@@ -131,11 +132,11 @@ export const VertexRoot = (props) => {
                                     "Nothing Root Vertex"
                             }
                         </table>
+                        <SntForm />
                     </VertexContext.Provider>
                 </div>
                 <div class="row">
-                    <div class ="col-md-4">
-                        <Sentence.Dummy />
+                    <div class ="col-md-8">
                     </div>
                 </div>
         </div>
