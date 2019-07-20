@@ -13,19 +13,23 @@ export const SntForm = (props) => {
     const [ name , setName ] = useState( props.name ),
         [ msg , setMsg ] = useState( "" )
 
+    const sbmt = (e) => {
+        snt.create(e,name,msg)
+    }
+
     return (
         <div>
-            <Form onSubmit={(e)=>snt.create(e,name,msg) } >
+            <Form onSubmit={sbmt} >
                 <Form.Group controlId="exampleForm.ControlTextarea1">
                     <Form.Label>Example textarea</Form.Label>
                     <Form.Control as="textarea" rows="3"
                         onChange={(e)=>{ setMsg( e.target.value ); console.log(msg) } } />
                 </Form.Group>
-            <Button variant="primary" type="submit" >
-                作成する
-            </Button>
-        </Form>
-    </div>
+                <Button variant="primary" type="submit" >
+                    作成する
+                </Button>
+            </Form>
+        </div>
     );
 }
 
@@ -46,14 +50,15 @@ const Disp = (props) => {
 export const SntView = (props) => {
     const snt = useContext(SentenceContext)
     useEffect( ()=> {
-        snt.Load()
+        snt.load('sentence/','')
+        console.log(snt.data)
     },[] )
 
     return (
         <div>
             {
                 snt ? snt.lst.map( dt => {
-                    return <Disp data={dt}/>
+                    return <Disp data={snt.data[dt]}/>
                 }) : "NoData"
             }
         </div>

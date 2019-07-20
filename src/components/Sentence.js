@@ -19,10 +19,9 @@ const Sentence = ({children}) => {
             firebaseDb.ref(address).push({
                 "name" : name, "create_time" : create_time,"msg" : msg,
             })
-            console.log("create called")
+            // console.log("create called")
             return ev.preventDefault();
         } catch (e) {
-            console.log("error occured")
             return ev.preventDefault();
         }
     }
