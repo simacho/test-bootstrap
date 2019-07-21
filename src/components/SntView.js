@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect , useCallback } from 'react'
+import ReactDOM from 'react-dom';
 import { Button , Alert , Badge , Form } from 'react-bootstrap';
 import firebase from 'firebase';
 import firebaseui from 'firebaseui';
@@ -10,19 +11,20 @@ import { Sentence , SentenceContext } from './Sentence.js'
 // 作成
 export const SntForm = (props) => {
     const snt = useContext(SentenceContext)
-    const [ name , setName ] = useState( props.name ),
+    const [ name , setName ] = useState( props.name ? props.name : "noname"),
         [ msg , setMsg ] = useState( "" )
 
     const sbmt = (e) => {
         snt.create(e,name,msg)
+        setMsg("")
     }
 
     return (
         <div>
             <Form onSubmit={sbmt} >
                 <Form.Group controlId="exampleForm.ControlTextarea1">
-                    <Form.Label>Example textarea</Form.Label>
-                    <Form.Control as="textarea" rows="3"
+                    <Form.Label>textarea</Form.Label>
+                    <Form.Control as="textarea" rows="3" value ={msg}
                         onChange={(e)=>{ setMsg( e.target.value ); console.log(msg) } } />
                 </Form.Group>
                 <Button variant="primary" type="submit" >
@@ -49,19 +51,24 @@ const Disp = (props) => {
 // View 全体 
 export const SntView = (props) => {
     const snt = useContext(SentenceContext)
+
     useEffect( ()=> {
         snt.load('sentence/','')
         console.log(snt.data)
-    },[] )
+
+    },[snt.data] )
 
     return (
         <div>
-            {
-                snt ? snt.lst.map( dt => {
-                    return <Disp data={snt.data[dt]}/>
-                }) : "NoData"
-            }
+            <div>
+                {
+                    snt ? snt.lst.map( dt => {
+                        return <Disp data={snt.data[dt]}/>
+                    }) : "NoData"
+                }
+            </div>
         </div>
+
     )
 }
 

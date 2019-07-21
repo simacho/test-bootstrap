@@ -122,7 +122,7 @@ export const VertexRoot = (props) => {
     return (
         <div class="container">
             <div class="row">
-                    <div class ="col-md-4">
+                    <div class ="col-md-3">
                         <VertexContext.Provider value={
                             { vtx , setVtx , crnt , setCrnt }
                         }>
@@ -132,14 +132,12 @@ export const VertexRoot = (props) => {
                                     "Nothing Root Vertex"
                             }
                         </table>
-                        <SntView />
-                        <SntForm />
                     </VertexContext.Provider>
                 </div>
-                <div class="row">
-                    <div class ="col-md-8">
+                    <div class ="col-md-9">
+                        <SntView />
+                        <SntForm />
                     </div>
-                </div>
         </div>
     </div>
     )
