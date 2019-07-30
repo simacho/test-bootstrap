@@ -9,17 +9,18 @@ import { BbsThreadTop } from './BbsThread';
 import { AuthProvider , AuthContext } from './Auth';
 import { MyPageDisplayInfo } from './MyPage'
 import { LoginPage, LoginPage2 } from './LoginPage'
-import { VertexTop , VertexRoot } from './Vertex'
+import { VertexRoot } from './Vertex'
 import { Sentence , SentenceContext } from './Sentence';
+import { Vertex , VertexContext } from './Vertex';
 
 export default () => {
     return (
         <AuthProvider>
-            <Sentence>
-                <BrowserRouter>
-                    <LoginRoute />
-                </BrowserRouter>
-            </Sentence>
+                <Sentence>
+                    <BrowserRouter>
+                        <LoginRoute />
+                    </BrowserRouter>
+                </Sentence>
         </AuthProvider>
     );
 }

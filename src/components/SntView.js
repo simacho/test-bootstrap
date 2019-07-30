@@ -6,11 +6,14 @@ import firebaseui from 'firebaseui';
 import { firebaseDb } from '../firebase/index.js'
 import * as util from './Util.js';
 import { Sentence , SentenceContext } from './Sentence.js'
+import { Vertex, VertexContext } from './Vertex.js'
 
 
 // 作成
 export const SntForm = (props) => {
     const snt = useContext(SentenceContext)
+    const vtx = useContext(VertexContext)
+
     const [ name , setName ] = useState( props.name ? props.name : "noname"),
         [ msg , setMsg ] = useState( "" )
 
@@ -54,7 +57,7 @@ export const SntView = (props) => {
 
     useEffect( ()=> {
         snt.load('sentence/','')
-        console.log(snt.data)
+        // console.log(snt.data)
 
     },[snt.data] )
 

@@ -13,11 +13,12 @@ const Sentence = ({children}) => {
     const [ lst , setList ] = useState( [] );
     var address = 'sentence/'
 
-    const create = (ev:InputEvent , name , msg) => { 
+    const create = (ev:InputEvent , name , msg , address ) => { 
         try {
             var create_time = (new Date()).getTime();
             firebaseDb.ref(address).push({
                 "name" : name, "create_time" : create_time,"msg" : msg,
+                "address" : address, 
             })
             // console.log("create called")
             return ev.preventDefault();
