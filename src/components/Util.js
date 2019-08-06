@@ -26,5 +26,7 @@ ${d.getMinutes().toString().padStart(2, '0')}
     return formatted;
 }
 
-
-
+export function isObject(o) {
+      return (o instanceof Object && !(o instanceof Array)) ? true : false;
+};
+ 
