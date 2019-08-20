@@ -17,20 +17,33 @@ const VertexCreate = (props) => {
 
     return (
         <div>
-            <Form onSubmit={(e)=>vtx.create(e,address,name)} >
+            <Form validated={true} onSubmit={(e)=>vtx.create(e,address,name)} >
                 <Form.Group controlId="formDisplayName">
                     <Form.Label>テスト</Form.Label>
-                    <Form.Label>{address}</Form.Label>
+                    <Form.Control name="address" type="text"
+                        placeholder="アドレス名"
+                        required
+                        onChange={(e)=>{ setAddress( e.target.value ); console.log(e.target.value);} } />
+                    <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                     <Form.Control name="name" type="text"
                         placeholder="新しいノードの作成"
+                        required
                         onChange={(e)=>{ setName( e.target.value ); console.log(e.target.value);} } />
+            
+                           <Form.Control.Feedback type="invalid">
+                                             Please choose a username.
+                                                         </Form.Control.Feedback>
+
                 </Form.Group>
-                <Button variant="primary" type="submit" >
+                <Button variant="primary" type="submit" class="invalid-feedback" >
                     作成する
                 </Button>
             </Form>
         </div>
+
+
     );
+
 }
 
 
@@ -49,8 +62,9 @@ const VertexProvider = ({children}) => {
             firebaseDb.ref(fullname).once("value",(snapshot) => {
                 if ( !snapshot.val() ) {
                     firebaseDb.ref(fullname).set(
-                        { "_fullname" : fullname,
-                            "_disp" : name, 
+                        {   "_name" : name,
+                            "_address" : address,
+                            "_fullname" : fullname,
                         }  , (err)=> {
                             if (err) throw new Error("vertex create error")
                         }
@@ -58,7 +72,7 @@ const VertexProvider = ({children}) => {
                     console.log("create called")
                 }                     
             })
-           return ev.preventDefault();
+            return ev.preventDefault();
         } catch (e) {
             console.log("error occured")
             return ev.preventDefault();
@@ -69,6 +83,7 @@ const VertexProvider = ({children}) => {
     const load = useCallback(async (address,filter) => {
         try {
             //            setLoading(true)
+            console.log( address )
             var orderRef = firebaseDb.ref(address)
             orderRef.on("value", (snap) => {
                 setVtx( snap.val() )
@@ -85,8 +100,8 @@ const VertexProvider = ({children}) => {
                 load,
                 vtx,
                 crnt,
-                }}
-            >
+            }}
+        >
             {children}
         </VertexContext.Provider>
     )
