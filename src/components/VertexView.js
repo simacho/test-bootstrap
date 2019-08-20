@@ -14,6 +14,10 @@ const VertexTree = (props) => {
     let depth = parseInt(props.depth)
     const [collapse , setCollapse] = useState( false )
 
+    // Object かつ _で始まる要素を抜いた物を子供とする
+    var list = Object.keys(props.vtx).filter( x => util.isObject(props.vtx[x]))
+    var list2 = list.filter( x => !isValueInfo(x) )
+
     // ボタンでの開閉処理
     const VertexCollpaseButton = () => {
         return (
@@ -24,7 +28,6 @@ const VertexTree = (props) => {
     }
 
     const VertexDisp = () => {
-        //
 
         return (
             <ListGroup.Item
@@ -32,16 +35,11 @@ const VertexTree = (props) => {
                 active = {vc.crnt == props.key ? true : false }
             > {'---'.repeat(depth)}
                 {"_fullname" in props.vtx ? props.vtx._fullname : ""}
-                <VertexCollpaseButton />
+                {list2.length >=1 && <VertexCollpaseButton />}
             </ListGroup.Item>
         )
     }
-
-    // 再帰処理が必要な要素を抽出する
-    // Object かつ _で始まる要素を抜いた物を子供とする
-    var list = Object.keys(props.vtx).filter( x => util.isObject(props.vtx[x]))
-    var list2 = list.filter( x => !isValueInfo(x) )
-
+    // 
     // 
     return (
         <div>
