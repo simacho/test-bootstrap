@@ -5,6 +5,7 @@ import {  Dropdown, DropdownButton , ButtonGroup } from 'react-bootstrap';
 import {  Modal , InputGroup } from 'react-bootstrap';
 import { Sentence , SentenceContext } from './Sentence';
 import { VertexProvider , VertexContext , VertexCreate } from './Vertex'
+import { MyModalInput } from './MyModalView'
 
 import * as util from './Util.js';
 
@@ -30,40 +31,28 @@ const VertexTree = (props) => {
         )
     }
 
+   
+    // Edit menu
     const VertexModalEdit = () => {
         const isDlgEdit = () => { return dlg == 1 ? true : false }
+        const resetDlgEdit = () => {setDlg(0)}
 
         return (
-            <Modal show={isDlgEdit()} onHide = {setDlg}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Edit</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <InputGroup size="sm" className="mb-3">
-                        <InputGroup.Prepend>
-                            <InputGroup.Text id="inputGroup-sizing-sm">Small</InputGroup.Text>
-                        </InputGroup.Prepend>
-                        <FormControl aria-label="Small" aria-describedby="inputGroup-sizing-sm" />
-                    </InputGroup>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary">
-                        Close
-                    </Button>
-                    <Button variant="primary">
-                        Save Changes
-                    </Button>
-                </Modal.Footer>
-            </Modal>
-        );
+            <MyModalInput show={isDlgEdit} onHide={resetDlgEdit}
+            caption ="edit" label="label"                        
+            no="close" yes="OK"
+            nofunc={resetDlgEdit} yesfunc={resetDlgEdit}
+        />
+        )
     }
+
 
     // ドロップダウンメニュー
     const VetexDropDown = () => {
         return (
             <div class="float-right">
             <ButtonGroup>
-                <DropdownButton variant="secondary" size="sm" id="dropdown-item-button" title="" >
+                <DropdownButton variant="secondary" size="sm" id="dropdown-item-button" title="" drop="left" >
                     <Dropdown.Item as="button" onSelect={()=> setDlg(1) } >Edit</Dropdown.Item>
                     <Dropdown.Item as="button">Delete</Dropdown.Item>
                     <Dropdown.Item as="button">Cleate</Dropdown.Item>

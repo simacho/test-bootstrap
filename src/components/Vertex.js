@@ -53,7 +53,7 @@ const VertexProvider = ({children}) => {
     const [ crnt , setCrnt ] = useState( "" )
     const [ loading , setLoading ] = useState( false )
 
-    // ノード情報の読み込み
+    // ノード情報の書き込み
     const create = (ev:InputEvent , address , name) => { 
         try {
             var fullname = address + '/' + name
