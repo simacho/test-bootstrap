@@ -36,12 +36,15 @@ const VertexTree = (props) => {
     const VertexModalEdit = () => {
         const isDlgEdit = () => { return dlg == 1 ? true : false }
         const resetDlgEdit = () => {setDlg(0)}
-
+        const okDlgEdit = (arg) => {
+            vc.mergeupdate( vc.crnt , arg ) 
+            setDlg(0) 
+        }
         return (
             <MyModalInput show={isDlgEdit} onHide={resetDlgEdit}
             caption ="edit" label="label"                        
             no="close" yes="OK"
-            nofunc={resetDlgEdit} yesfunc={resetDlgEdit}
+            nofunc={resetDlgEdit} yesfunc={okDlgEdit}
         />
         )
     }

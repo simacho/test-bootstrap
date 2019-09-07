@@ -5,6 +5,8 @@ import {  Modal , InputGroup , FormControl } from 'react-bootstrap';
 import * as util from './Util.js';
 
 export const MyModalInput = (props) => {
+    const [ txt , setTxt ] = useState("")
+
     return (
         <Modal show={props.show()} onHide ={props.onHide}>
             <Modal.Header closeButton>
@@ -15,13 +17,10 @@ export const MyModalInput = (props) => {
                     <InputGroup.Prepend>
                         <InputGroup.Text id="inputGroup-sizing-sm">{props.label}</InputGroup.Text>
                     </InputGroup.Prepend>
-                    <FormControl aria-label="Small" aria-describedby="inputGroup-sizing-sm" />
+                    <FormControl aria-label="Small" aria-describedby="inputGroup-sizing-sm" onChange={(e)=>{ setTxt( e.target.value ); console.log(txt)}}/>
                 </InputGroup>
             </Modal.Body>
-            <Modal.Footer>
-                <Button variant="secondary" onClick={props.nofunc} >{props.no}</Button>
-                <Button variant="primary" onClick={props.yesfunc} >{props.yes}</Button>
-            </Modal.Footer>
+            <Modal.Footer> <Button variant="secondary" onClick={props.nofunc} >{props.no}</Button> <Button variant="primary" onClick={props.yesfunc} >{props.yes}</Button> </Modal.Footer>
         </Modal>
     );
 }

@@ -56,15 +56,11 @@ const VertexProvider = ({children}) => {
     // ノード情報の書き込み
     const create = (ev:InputEvent , address , name) => { 
         try {
-            var fullname = address + '/' + name
-            var update = {}
-
-            firebaseDb.ref(fullname).once("value",(snapshot) => {
+            firebaseDb.ref(address).once("value",(snapshot) => {
                 if ( !snapshot.val() ) {
-                    firebaseDb.ref(fullname).set(
+                    firebaseDb.ref(address).set(
                         {   "_name" : name,
                             "_address" : address,
-                            "_fullname" : fullname,
                         }  , (err)=> {
                             if (err) throw new Error("vertex create error")
                         }
@@ -72,6 +68,21 @@ const VertexProvider = ({children}) => {
                     console.log("create called")
                 }                     
             })
+            return ev.preventDefault();
+        } catch (e) {
+            console.log("error occured")
+            return ev.preventDefault();
+        }
+    }
+
+    // ノード情報の変更
+    const mergeupdate = (ev:InputEvent , address , name) => { 
+        try {
+            firebaseDb.ref(address).set(
+                {   "_name" : name,
+                    "_address" : address,
+                }, {merge:true}
+            )
             return ev.preventDefault();
         } catch (e) {
             console.log("error occured")
@@ -97,6 +108,7 @@ const VertexProvider = ({children}) => {
         <VertexContext.Provider
             value={{
                 create,
+                mergeupdate,
                 load,
                 vtx,
                 crnt,
