@@ -3,7 +3,7 @@ import { useContext, createContext, useState , useEffect ,useCallback , useMemo 
 import { Button , Alert , Badge , Form , ListGroup } from 'react-bootstrap';
 import firebase from 'firebase';
 import firebaseui from 'firebaseui';
-import { firebaseDb } from '../firebase/index.js'
+import { firebaseDb , firestoreDb } from '../firebase/index.js'
 import { Sentence , SentenceContext } from './Sentence';
 import * as util from './Util.js';
 import { SntForm , SntView } from './SntView'
@@ -41,7 +41,6 @@ const VertexCreate = (props) => {
             </Form>
         </div>
 
-
     );
 
 }
@@ -55,7 +54,9 @@ const VertexProvider = ({children}) => {
 
     // ノード情報の書き込み
     const create = (ev:InputEvent , address , name) => { 
+        console.log( 'vtx create ' + address + ' ' + name )
         try {
+            /*
             firebaseDb.ref(address).once("value",(snapshot) => {
                 if ( !snapshot.val() ) {
                     firebaseDb.ref(address).set(
@@ -68,6 +69,12 @@ const VertexProvider = ({children}) => {
                     console.log("create called")
                 }                     
             })
+            */
+            firestoreDb.collection('vertices').add({
+                address: address,
+                name: name
+            }).then( ref => { console.log( 'Added doc ' , ref.id )});
+
             return ev.preventDefault();
         } catch (e) {
             console.log("error occured")
@@ -78,11 +85,17 @@ const VertexProvider = ({children}) => {
     // ノード情報の変更
     const mergeupdate = (ev:InputEvent , address , name) => { 
         try {
+            /*
             firebaseDb.ref(address).set(
                 {   "_name" : name,
                     "_address" : address,
                 }, {merge:true}
             )
+            */
+            firestoreDb.collection('vertices').doc(address).set({
+                name: name
+            },{merge: true}).then( ref => { console.log( 'Merge doc ', ref.id) } );
+
             return ev.preventDefault();
         } catch (e) {
             console.log("error occured")
@@ -93,12 +106,20 @@ const VertexProvider = ({children}) => {
     // ノード情報の読み込み
     const load = useCallback(async (address,filter) => {
         try {
+            /*
             //            setLoading(true)
             console.log( address )
             var orderRef = firebaseDb.ref(address)
             orderRef.on("value", (snap) => {
                 setVtx( snap.val() )
             })        
+            */
+            console.log('firestore load')
+            // firestoreに移行
+           firestoreDb.collection('vertices').get().then((snapshot) => {
+               const records = snapshot.docs.map( elem => elem.data())
+               setVtx( records )
+            });
         } catch (e) {
             console.error(e.code, e.message)
         }
