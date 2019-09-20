@@ -18,9 +18,10 @@ const VertexTree = (props) => {
     const [collapse , setCollapse] = useState( false )
     const [dlg , setDlg] = useState(0)
 
-    // Object かつ _で始まる要素を抜いた物を子供とする
-    var list = Object.keys(props.vtx).filter(
-        x => util.isObject(props.vtx[x]) && !isValueInfo(x))
+    // 読み込みが終わるまでは表示できない
+    if ( props.vtx.docs == null ) return null
+    console.log( props.vtx )
+    var docs = props.vtx.docs.map( elem => elem.data() )
 
     // ボタンでの開閉処理
     const VertexCollpaseButton = () => {
@@ -74,26 +75,37 @@ const VertexTree = (props) => {
             >
                 {'---'.repeat(depth)}
                 {"_name" in props.vtx ? props.vtx._name : ""}
+                {/*
                 {list.length >=1 && <VertexCollpaseButton />}
+                */}
                 <VetexDropDown />
             </ListGroup.Item>
         )
     }
 
+    const VertexListDisp = (dc) => {
+        return (
+            <div>
+                <ListGroup as="ul">
+                    <VertexDisp />
+                </ListGroup>
+                {/*                {
+                    collapse ? "" : 
+                        list2.map( sn => {
+                            return <VertexTree key={sn} vtx={props.vtx[sn]} depth={depth+1} />
+                        })
+                }*/}
+                <VertexModalEdit />
+            </div>
+        )
+    }
+
     // 
     return (
-        <div>
-            <ListGroup as="ul">
-                <VertexDisp />
-            </ListGroup>
-            {
-                collapse ? "" : 
-                list.map( sn => {
-                    return <VertexTree key={sn} vtx={props.vtx[sn]} depth={depth+1} />
-                })
-            }
-            <VertexModalEdit />
-        </div>
+        docs.map( dc => {
+            return <VertexListDisp dc={dc}/>
+        }
+        )
     ) 
 }
 

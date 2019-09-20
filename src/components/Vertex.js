@@ -117,8 +117,10 @@ const VertexProvider = ({children}) => {
             console.log('firestore load')
             // firestoreに移行
            firestoreDb.collection('vertices').get().then((snapshot) => {
-               const records = snapshot.docs.map( elem => elem.data())
-               setVtx( records )
+               //const records = snapshot.docs.map( elem => elem.data())
+               //setVtx( records )
+               console.log( snapshot )
+               setVtx( snapshot )
             });
         } catch (e) {
             console.error(e.code, e.message)
