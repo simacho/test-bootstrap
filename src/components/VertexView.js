@@ -20,8 +20,6 @@ const VertexTree = (props) => {
 
     // 読み込みが終わるまでは表示できない
     if ( props.vtx.docs == null ) return null
-    console.log( props.vtx )
-    var docs = props.vtx.docs.map( elem => elem.data() )
 
     // ボタンでの開閉処理
     const VertexCollpaseButton = () => {
@@ -31,7 +29,6 @@ const VertexTree = (props) => {
             </span>
         )
     }
-
    
     // Edit menu
     const VertexModalEdit = () => {
@@ -83,18 +80,20 @@ const VertexTree = (props) => {
         )
     }
 
-    const VertexListDisp = (dc) => {
+    const VertexListDisp = (arg) => {
+        var subc = typeof arg.dc.ref.collection === 'function' ? arg.dc.ref.collection('vertices').get().docs : []
+        console.log( arg )
         return (
             <div>
                 <ListGroup as="ul">
                     <VertexDisp />
                 </ListGroup>
-                {/*                {
+                {                
                     collapse ? "" : 
-                        list2.map( sn => {
-                            return <VertexTree key={sn} vtx={props.vtx[sn]} depth={depth+1} />
+                        subc.map( sn => {
+                            return <VertexTree vtx={sn} depth={depth+1} />
                         })
-                }*/}
+                }
                 <VertexModalEdit />
             </div>
         )
@@ -102,7 +101,7 @@ const VertexTree = (props) => {
 
     // 
     return (
-        docs.map( dc => {
+        props.vtx.docs.map( dc => {
             return <VertexListDisp dc={dc}/>
         }
         )
