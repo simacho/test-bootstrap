@@ -114,14 +114,13 @@ const VertexProvider = ({children}) => {
                 setVtx( snap.val() )
             })        
             */
+            setLoading(true)
             console.log('firestore load')
             // firestoreに移行
-           firestoreDb.collection('vertices').get().then((snapshot) => {
-               //const records = snapshot.docs.map( elem => elem.data())
-               //setVtx( records )
-               console.log( snapshot )
-               setVtx( snapshot )
-            });
+           let dcref = firestoreDb.collection('vertices').doc()
+               console.log( dcref )
+               setVtx( dcref )
+            setLoading(false)
         } catch (e) {
             console.error(e.code, e.message)
         }

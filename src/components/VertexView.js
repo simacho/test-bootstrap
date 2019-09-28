@@ -29,7 +29,7 @@ const VertexTree = (props) => {
             </span>
         )
     }
-   
+
     // Edit menu
     const VertexModalEdit = () => {
         const isDlgEdit = () => { return dlg == 1 ? true : false }
@@ -40,10 +40,10 @@ const VertexTree = (props) => {
         }
         return (
             <MyModalInput show={isDlgEdit} onHide={resetDlgEdit}
-            caption ="edit" label="label"                        
-            no="close" yes="OK"
-            nofunc={resetDlgEdit} yesfunc={okDlgEdit}
-        />
+                caption ="edit" label="label"                        
+                no="close" yes="OK"
+                nofunc={resetDlgEdit} yesfunc={okDlgEdit}
+            />
         )
     }
 
@@ -52,18 +52,19 @@ const VertexTree = (props) => {
     const VetexDropDown = () => {
         return (
             <div class="float-right">
-            <ButtonGroup>
-                <DropdownButton variant="secondary" size="sm" id="dropdown-item-button" title="" drop="left" >
-                    <Dropdown.Item as="button" onSelect={()=> setDlg(1) } >Edit</Dropdown.Item>
-                    <Dropdown.Item as="button">Delete</Dropdown.Item>
-                    <Dropdown.Item as="button">Cleate</Dropdown.Item>
-                </DropdownButton>
-            </ButtonGroup>
-        </div>
+                <ButtonGroup>
+                    <DropdownButton variant="secondary" size="sm" id="dropdown-item-button" title="" drop="left" >
+                        <Dropdown.Item as="button" onSelect={()=> setDlg(1) } >Edit</Dropdown.Item>
+                        <Dropdown.Item as="button">Delete</Dropdown.Item>
+                        <Dropdown.Item as="button">Cleate</Dropdown.Item>
+                    </DropdownButton>
+                </ButtonGroup>
+            </div>
         )
     }
 
     const VertexDisp = () => {
+        console.log( props.vtx.get() )
 
         return (
             <ListGroup.Item
@@ -71,7 +72,7 @@ const VertexTree = (props) => {
                 active = {vc.crnt == props.key ? true : false }
             >
                 {'---'.repeat(depth)}
-                {"_name" in props.vtx ? props.vtx._name : ""}
+                {"name" in props.vtx.get().doc.data() ? props.vtx.get().doc.data()  : ""}
                 {/*
                 {list.length >=1 && <VertexCollpaseButton />}
                 */}
@@ -80,32 +81,23 @@ const VertexTree = (props) => {
         )
     }
 
-    const VertexListDisp = (arg) => {
-        var subc = typeof arg.dc.ref.collection === 'function' ? arg.dc.ref.collection('vertices').get().docs : []
-        console.log( arg )
-        return (
-            <div>
-                <ListGroup as="ul">
-                    <VertexDisp />
-                </ListGroup>
-                {                
-                    collapse ? "" : 
-                        subc.map( sn => {
-                            return <VertexTree vtx={sn} depth={depth+1} />
-                        })
-                }
-                <VertexModalEdit />
-            </div>
-        )
-    }
-
     // 
     return (
-        props.vtx.docs.map( dc => {
-            return <VertexListDisp dc={dc}/>
-        }
-        )
-    ) 
+        <div>
+            <ListGroup as="ul">
+                <VertexDisp />
+            </ListGroup>
+            {                
+                props.vtx.collection('vertices').get().then((sn) => {
+                    sn.docs.map((dc) => {
+                        return <VertexTree vtx={dc.ref} depth={depth+1} />
+                    })
+                })
+            }
+            <VertexModalEdit />
+        </div>
+    )
+
 }
 
 
@@ -118,6 +110,7 @@ export const VertexView = (props) => {
     },[] )
 
     if (vc.vtx == null ) return "Vertex ReadErr";
+    if (vc.loading) return
 
     return (
         <div>
