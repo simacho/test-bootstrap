@@ -18,9 +18,6 @@ const VertexTree = (props) => {
     const [collapse , setCollapse] = useState( false )
     const [dlg , setDlg] = useState(0)
 
-    // 読み込みが終わるまでは表示できない
-    if ( props.vtx.docs == null ) return null
-
     // ボタンでの開閉処理
     const VertexCollpaseButton = () => {
         return (
@@ -64,8 +61,7 @@ const VertexTree = (props) => {
     }
 
     const VertexDisp = () => {
-        console.log( props.vtx.get() )
-
+        //       console.log( props.vtx.get() )
         return (
             <ListGroup.Item
                 action onClick={vc.setcrnt}
@@ -87,6 +83,7 @@ const VertexTree = (props) => {
             <ListGroup as="ul">
                 <VertexDisp />
             </ListGroup>
+            {/*
             {                
                 props.vtx.collection('vertices').get().then((sn) => {
                     sn.docs.map((dc) => {
@@ -94,6 +91,7 @@ const VertexTree = (props) => {
                     })
                 })
             }
+            */}
             <VertexModalEdit />
         </div>
     )
@@ -110,7 +108,7 @@ export const VertexView = (props) => {
     },[] )
 
     if (vc.vtx == null ) return "Vertex ReadErr";
-    if (vc.loading) return
+    if (vc.loading == true) return "";
 
     return (
         <div>

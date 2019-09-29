@@ -49,8 +49,9 @@ const VertexCreate = (props) => {
 const VertexProvider = ({children}) => {
     const [ address , setAddress ] = useState( "" )
     const [ vtx , setVtx ] = useState( {} )
+    const [ rootvtx , setRootvtx ] = useState( null )
     const [ crnt , setCrnt ] = useState( "" )
-    const [ loading , setLoading ] = useState( false )
+    const [ loading , setLoading ] = useState( true )
 
     // ノード情報の書き込み
     const create = (ev:InputEvent , address , name) => { 
@@ -106,20 +107,16 @@ const VertexProvider = ({children}) => {
     // ノード情報の読み込み
     const load = useCallback(async (address,filter) => {
         try {
-            /*
-            //            setLoading(true)
-            console.log( address )
-            var orderRef = firebaseDb.ref(address)
-            orderRef.on("value", (snap) => {
-                setVtx( snap.val() )
-            })        
-            */
             setLoading(true)
             console.log('firestore load')
-            // firestoreに移行
-           let dcref = firestoreDb.collection('vertices').doc()
-               console.log( dcref )
-               setVtx( dcref )
+            let datahash = []
+            let dcref = await firestoreDb.collection('vertices').get().then((snapshot)=>{
+                snapshot.forEach((doc) => {
+                    datahash[doc.ref] = doc.data() )
+                    if ( doc.data().parent == null ) setRootvtx( doc.ref )
+                })
+            })
+            setVtx( datalist )
             setLoading(false)
         } catch (e) {
             console.error(e.code, e.message)
@@ -134,6 +131,7 @@ const VertexProvider = ({children}) => {
                 load,
                 vtx,
                 crnt,
+                loading,
             }}
         >
             {children}
