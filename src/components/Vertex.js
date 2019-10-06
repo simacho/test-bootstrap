@@ -54,27 +54,25 @@ const VertexProvider = ({children}) => {
     const [ loading , setLoading ] = useState( true )
 
     // ノード情報の書き込み
-    const create = (ev:InputEvent , address , name) => { 
+    const create = (ev:InputEvent , parent , name ) => { 
         console.log( 'vtx create ' + address + ' ' + name )
         try {
-            /*
-            firebaseDb.ref(address).once("value",(snapshot) => {
-                if ( !snapshot.val() ) {
-                    firebaseDb.ref(address).set(
-                        {   "_name" : name,
-                            "_address" : address,
-                        }  , (err)=> {
-                            if (err) throw new Error("vertex create error")
-                        }
-                    )
-                    console.log("create called")
-                }                     
-            })
-            */
+            // 子供自体の作成
             firestoreDb.collection('vertices').add({
                 address: address,
-                name: name
-            }).then( ref => { console.log( 'Added doc ' , ref.id )});
+                name: name,
+                children: [],
+                parent: parent
+            }).then( ref => {
+                // 親情報の書き込み
+               firestoreDb.collection('vertices').doc(parent).get().then((snp)=>{
+                   let children = snp.data().children
+                   children.push(ref)
+                   snp.ref.update({children: children})
+                })
+                console.log( 'Added doc ' , ref.id )
+            });
+    
 
             return ev.preventDefault();
         } catch (e) {
@@ -113,14 +111,7 @@ const VertexProvider = ({children}) => {
             let childlist = []
             let dcref = await firestoreDb.collection('vertices').get().then((snapshot)=>{
                 snapshot.forEach((doc) => {
-                    let data = {}
-                    doc.ref.collection('vertices').get().then((snsn)=>{
-                        snsn.forEach((child)=> childlist.push(child))
-                    })
-                    data = doc.data()
-                    data['children'] = childlist
-                    datahash[doc.ref] = data
-                    
+                    datahash[doc.ref] = doc.data()
                    if ( doc.data().parent == null ) setRoot( doc.ref )
                 })
             })
