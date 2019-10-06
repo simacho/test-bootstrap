@@ -49,7 +49,7 @@ const VertexCreate = (props) => {
 const VertexProvider = ({children}) => {
     const [ address , setAddress ] = useState( "" )
     const [ vtx , setVtx ] = useState( {} )
-    const [ rootvtx , setRootvtx ] = useState( null )
+    const [ root , setRoot ] = useState( null )
     const [ crnt , setCrnt ] = useState( "" )
     const [ loading , setLoading ] = useState( true )
 
@@ -109,15 +109,24 @@ const VertexProvider = ({children}) => {
         try {
             setLoading(true)
             console.log('firestore load')
-            let datahash = []
+            let datahash = {} 
+            let childlist = []
             let dcref = await firestoreDb.collection('vertices').get().then((snapshot)=>{
                 snapshot.forEach((doc) => {
-                    datahash[doc.ref] = doc.data() )
-                    if ( doc.data().parent == null ) setRootvtx( doc.ref )
+                    let data = {}
+                    doc.ref.collection('vertices').get().then((snsn)=>{
+                        snsn.forEach((child)=> childlist.push(child))
+                    })
+                    data = doc.data()
+                    data['children'] = childlist
+                    datahash[doc.ref] = data
+                    
+                   if ( doc.data().parent == null ) setRoot( doc.ref )
                 })
             })
-            setVtx( datalist )
+            setVtx( datahash )
             setLoading(false)
+            console.log( 'firestore loaded ' , datahash )
         } catch (e) {
             console.error(e.code, e.message)
         }
@@ -132,6 +141,7 @@ const VertexProvider = ({children}) => {
                 vtx,
                 crnt,
                 loading,
+                root,
             }}
         >
             {children}

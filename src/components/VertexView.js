@@ -68,7 +68,7 @@ const VertexTree = (props) => {
                 active = {vc.crnt == props.key ? true : false }
             >
                 {'---'.repeat(depth)}
-                {"name" in props.vtx.get().doc.data() ? props.vtx.get().doc.data()  : ""}
+                {props.vtx['name']}
                 {/*
                 {list.length >=1 && <VertexCollpaseButton />}
                 */}
@@ -113,7 +113,7 @@ export const VertexView = (props) => {
     return (
         <div>
             <table class="table">
-                <VertexTree vtx={vc.vtx} depth='0' />
+                <VertexTree vtx={vc.vtx} root={vc.root} depth='0' />
             </table>
             <VertexCreate />
         </div>
