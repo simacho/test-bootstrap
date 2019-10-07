@@ -62,18 +62,21 @@ const VertexProvider = ({children}) => {
             firestoreDb.collection('vertices').add({
                 name: name,
                 children: [],
+                parent: null
             }).then( ref => {
                 // 親更新
-                let pref = firestoreDb.collection('vertices').where('name','==', pname ) 
-                console.log(pref)
-                if ( pref != null ) {
-                    pref.get().then((snp)=>{
+                let query= firestoreDb.collection('vertices').where('name','==', pname ) 
+                console.log(query)
+                if ( query!= null ) {
+                    query.get().then((snp)=>{
                         console.log(snp)
-                        let children = snp.get('children')
-                        children.push(ref)
-                        snp.ref.update({children: children})
-                        // 子供の親更新
-                        ref.update({parent: snp.ref})
+                        if (snp.size > 0){
+                            let children = snp.docs[0].get('children')
+                            children.push(ref.id)
+                            snp.docs[0].ref.update({children: children})
+                            // 子供の親更新
+                            ref.update({parent: snp.docs[0].ref.id})
+                        }
                     })
                 }
                 console.log( 'Added doc ' , ref.id )
