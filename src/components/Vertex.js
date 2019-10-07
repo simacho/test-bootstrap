@@ -54,26 +54,30 @@ const VertexProvider = ({children}) => {
     const [ loading , setLoading ] = useState( true )
 
     // ノード情報の書き込み
-    const create = (ev:InputEvent , parent , name ) => { 
+    const create = (ev:InputEvent , pname , name ) => { 
         console.log( 'vtx create ' + address + ' ' + name )
         try {
+
             // 子供自体の作成
             firestoreDb.collection('vertices').add({
-                address: address,
                 name: name,
                 children: [],
-                parent: parent
             }).then( ref => {
-                // 親情報の書き込み
-               firestoreDb.collection('vertices').doc(parent).get().then((snp)=>{
-                   let children = snp.data().children
-                   children.push(ref)
-                   snp.ref.update({children: children})
-                })
+                // 親更新
+                let pref = firestoreDb.collection('vertices').where('name','==', pname ) 
+                console.log(pref)
+                if ( pref != null ) {
+                    pref.get().then((snp)=>{
+                        console.log(snp)
+                        let children = snp.get('children')
+                        children.push(ref)
+                        snp.ref.update({children: children})
+                        // 子供の親更新
+                        ref.update({parent: snp.ref})
+                    })
+                }
                 console.log( 'Added doc ' , ref.id )
             });
-    
-
             return ev.preventDefault();
         } catch (e) {
             console.log("error occured")
