@@ -18,6 +18,8 @@ const VertexTree = (props) => {
     const [collapse , setCollapse] = useState( false )
     const [dlg , setDlg] = useState(0)
 
+    const data = vc.vtx[props.present]
+    //
     // ボタンでの開閉処理
     const VertexCollpaseButton = () => {
         return (
@@ -65,10 +67,10 @@ const VertexTree = (props) => {
         return (
             <ListGroup.Item
                 action onClick={vc.setcrnt}
-                active = {vc.crnt == props.key ? true : false }
+                active = {vc.crnt == props.present ? true : false }
             >
                 {'---'.repeat(depth)}
-                {props.vtx['name']}
+                {data['name']}
                 {/*
                 {list.length >=1 && <VertexCollpaseButton />}
                 */}
@@ -83,15 +85,11 @@ const VertexTree = (props) => {
             <ListGroup as="ul">
                 <VertexDisp />
             </ListGroup>
-            {/*
-            {                
-                props.vtx.collection('vertices').get().then((sn) => {
-                    sn.docs.map((dc) => {
-                        return <VertexTree vtx={dc.ref} depth={depth+1} />
-                    })
+            {
+                data['children'].map((child) => {
+                    return <VertexTree present={child} depth={depth+1} />
                 })
             }
-            */}
             <VertexModalEdit />
         </div>
     )
@@ -110,10 +108,12 @@ export const VertexView = (props) => {
     if (vc.vtx == null ) return "Vertex ReadErr";
     if (vc.loading == true) return "";
 
+    console.log( vc.root )
+
     return (
         <div>
             <table class="table">
-                <VertexTree vtx={vc.vtx} root={vc.root} depth='0' />
+                <VertexTree present={vc.root} depth='0' />
             </table>
             <VertexCreate />
         </div>

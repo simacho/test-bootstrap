@@ -57,19 +57,19 @@ const VertexProvider = ({children}) => {
     const create = (ev:InputEvent , pname , name ) => { 
         console.log( 'vtx create ' + address + ' ' + name )
         try {
-
-            // 子供自体の作成
-            firestoreDb.collection('vertices').add({
-                name: name,
-                children: [],
-                parent: null
-            }).then( ref => {
-                // 親更新
-                let query= firestoreDb.collection('vertices').where('name','==', pname ) 
-                console.log(query)
-                if ( query!= null ) {
+            // 親の指定が存在していれば
+            let query= firestoreDb.collection('vertices').where('name','==', pname ) 
+            if ( query!= null ) {
+                // 子供自体の作成
+                firestoreDb.collection('vertices').add({
+                    name: name,
+                    children: [],
+                    parent: null
+                }).then( ref => {
+                    // 親更新
+                    // console.log(query)
                     query.get().then((snp)=>{
-                        console.log(snp)
+                        // console.log(snp)
                         if (snp.size > 0){
                             let children = snp.docs[0].get('children')
                             children.push(ref.id)
@@ -79,8 +79,8 @@ const VertexProvider = ({children}) => {
                         }
                     })
                 }
-                console.log( 'Added doc ' , ref.id )
-            });
+                );
+            }
             return ev.preventDefault();
         } catch (e) {
             console.log("error occured")
@@ -88,16 +88,54 @@ const VertexProvider = ({children}) => {
         }
     }
 
+    // ノード情報の移動
+    const delete = (ev:InputEvent , vid ) => { 
+        console.log( 'vtx delete' + vid )
+        try {
+            let rf = firestoreDb.collection('vertices').doc(vid);
+            let dc = rf.get().then(doc => {
+                    if ( doc.exist ){
+                        // 親のノードから削除する
+                        let pid = doc.data().parent
+                        let prf = firestoreDb.collection('vertices').doc(pid)
+                        prf.get().then(pdoc => {
+                            if ( pdoc.exist ){
+                                var children1 = pdoc.data().children( id => id != pid )
+                                children1.concat( doc.data().children ) // 子供の結合
+                                pdoc.data().children = children1
+                            }
+                        })
+                        // 子供の情報を親に
+
+                    }
+                })
+        
+            if ( rf0 != null ) {
+                query.get().then((snp)=>{
+                    // console.log(snp)
+                    if (snp.size > 0){
+                        let children = snp.docs[0].get('children')
+                        children.push(ref.id)
+                        snp.docs[0].ref.update({children: children})
+                        // 子供の親更新
+                        ref.update({parent: snp.docs[0].ref.id})
+                    }
+                })
+                }
+                );
+            }
+            return ev.preventDefault();
+        } catch (e) {
+            console.log("error occured")
+            return ev.preventDefault();
+        }
+    }
+
+    //
+
     // ノード情報の変更
     const mergeupdate = (ev:InputEvent , address , name) => { 
         try {
-            /*
-            firebaseDb.ref(address).set(
-                {   "_name" : name,
-                    "_address" : address,
-                }, {merge:true}
-            )
-            */
             firestoreDb.collection('vertices').doc(address).set({
                 name: name
             },{merge: true}).then( ref => { console.log( 'Merge doc ', ref.id) } );
@@ -118,13 +156,13 @@ const VertexProvider = ({children}) => {
             let childlist = []
             let dcref = await firestoreDb.collection('vertices').get().then((snapshot)=>{
                 snapshot.forEach((doc) => {
-                    datahash[doc.ref] = doc.data()
-                   if ( doc.data().parent == null ) setRoot( doc.ref )
+                    datahash[doc.ref.id] = doc.data()
+                   if ( "parent" in doc.data() && doc.data().parent == null ) setRoot( doc.ref.id )
                 })
             })
             setVtx( datahash )
             setLoading(false)
-            console.log( 'firestore loaded ' , datahash )
+            console.log( 'firestore loaded ' , datahash , root )
         } catch (e) {
             console.error(e.code, e.message)
         }
