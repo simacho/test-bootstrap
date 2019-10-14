@@ -4,6 +4,7 @@ import { Button , Alert , Badge , Form , ListGroup } from 'react-bootstrap';
 import firebase from 'firebase';
 import firebaseui from 'firebaseui';
 import { firebaseDb , firestoreDb } from '../firebase/index.js'
+import * as admin from 'firebase-admin';
 import { Sentence , SentenceContext } from './Sentence';
 import * as util from './Util.js';
 import { SntForm , SntView } from './SntView'
@@ -88,42 +89,22 @@ const VertexProvider = ({children}) => {
         }
     }
 
-    // ノード情報の移動
-    const delete = (ev:InputEvent , vid ) => { 
+    // ノード情報
+    const vanish = (ev:InputEvent , vid ) => { 
         console.log( 'vtx delete' + vid )
         try {
             let rf = firestoreDb.collection('vertices').doc(vid);
             let dc = rf.get().then(doc => {
-                    if ( doc.exist ){
-                        // 親のノードから削除する
-                        let pid = doc.data().parent
-                        let prf = firestoreDb.collection('vertices').doc(pid)
-                        prf.get().then(pdoc => {
-                            if ( pdoc.exist ){
-                                var children1 = pdoc.data().children( id => id != pid )
-                                children1.concat( doc.data().children ) // 子供の結合
-                                pdoc.data().children = children1
-                            }
-                        })
-                        // 子供の情報を親に
-
-                    }
-                })
-        
-            if ( rf0 != null ) {
-                query.get().then((snp)=>{
-                    // console.log(snp)
-                    if (snp.size > 0){
-                        let children = snp.docs[0].get('children')
-                        children.push(ref.id)
-                        snp.docs[0].ref.update({children: children})
-                        // 子供の親更新
-                        ref.update({parent: snp.docs[0].ref.id})
-                    }
-                })
+                if ( doc.exist ){
+                    // 親のノードから削除する
+                    let pid = doc.data().parent
+                    let prf = firestoreDb.collection('vertices').doc(pid)
+                    prf.update({
+                        children: admin.firestore.FieldValue.arrayRemove(vid)
+                    })
                 }
-                );
-            }
+            });
+            rf.delete();
             return ev.preventDefault();
         } catch (e) {
             console.log("error occured")
@@ -146,6 +127,7 @@ const VertexProvider = ({children}) => {
             return ev.preventDefault();
         }
     }
+
 
     // ノード情報の読み込み
     const load = useCallback(async (address,filter) => {
