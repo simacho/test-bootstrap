@@ -18,7 +18,7 @@ const VertexCreate = (props) => {
 
     return (
         <div>
-            <Form validated={true} onSubmit={(e)=>vtx.create(e,address,name)} >
+            <Form validated={true} onSubmit={(e)=>vtx.create_byname(e,address,name)} >
                 <Form.Group controlId="formDisplayName">
                     <Form.Label>テスト</Form.Label>
                     <Form.Control name="address" type="text"
@@ -54,34 +54,22 @@ const VertexProvider = ({children}) => {
     const [ crnt , setCrnt ] = useState( "" )
     const [ loading , setLoading ] = useState( true )
 
-    // ノード情報の書き込み
-    const create = (ev:InputEvent , pname , name ) => { 
-        console.log( 'vtx create ' + address + ' ' + name )
+    // 作成する
+    const create = (ev:InputEvent , pid , name ) => { 
+        console.log( 'vtx create ' + pid + ' ' + name )
         try {
-            // 親の指定が存在していれば
-            let query= firestoreDb.collection('vertices').where('name','==', pname ) 
-            if ( query!= null ) {
-                // 子供自体の作成
-                firestoreDb.collection('vertices').add({
+            let clref = firestoreDb.collection('vertices')
+            clref.doc(pid).get().then( pdoc => {
+                clref.add({
                     name: name,
                     children: [],
-                    parent: null
+                    parent: pid 
                 }).then( ref => {
-                    // 親更新
-                    // console.log(query)
-                    query.get().then((snp)=>{
-                        // console.log(snp)
-                        if (snp.size > 0){
-                            let children = snp.docs[0].get('children')
-                            children.push(ref.id)
-                            snp.docs[0].ref.update({children: children})
-                            // 子供の親更新
-                            ref.update({parent: snp.docs[0].ref.id})
-                        }
-                    })
-                }
-                );
-            }
+                    let children = pdoc.get('children')
+                    children.push(ref.id)
+                    pdoc.ref.update({children: children})
+                })
+            })
             return ev.preventDefault();
         } catch (e) {
             console.log("error occured")
@@ -89,22 +77,39 @@ const VertexProvider = ({children}) => {
         }
     }
 
-    // ノード情報
+    // 名前で作成する
+    const create_byname = (ev:InputEvent , pname , name ) => {
+        let query= firestoreDb.collection('vertices').where('name','==', pname ) 
+        if ( query!= null ) {
+            query.get().then((snp)=>{
+                if (snp.size > 0){
+                    create( ev , snp.docs[0].ref.id , name )
+                }
+            })
+        }
+        return ev.preventDefault();
+     }
+
+    // 削除する 
     const vanish = (ev:InputEvent , vid ) => { 
         console.log( 'vtx delete' + vid )
         try {
-            let rf = firestoreDb.collection('vertices').doc(vid);
+            let crf = firestoreDb.collection('vertices')
+            let rf = crf.doc(vid) 
             let dc = rf.get().then(doc => {
                 if ( doc.exist ){
                     // 親のノードから削除する
-                    let pid = doc.data().parent
-                    let prf = firestoreDb.collection('vertices').doc(pid)
+                    let prf = crf.doc(doc.data().parent)
                     prf.update({
                         children: admin.firestore.FieldValue.arrayRemove(vid)
                     })
+                    // 子供の親ノードを変更する
+                    doc.data().children.map((child) => {
+                        crf.doc(child).update({parent: doc.data().parent})
+                    })
                 }
-            });
-            rf.delete();
+            })
+            // rf.delete();
             return ev.preventDefault();
         } catch (e) {
             console.log("error occured")
@@ -154,6 +159,7 @@ const VertexProvider = ({children}) => {
         <VertexContext.Provider
             value={{
                 create,
+                create_byname,
                 mergeupdate,
                 load,
                 vtx,
