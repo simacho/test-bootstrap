@@ -5,11 +5,9 @@ import {  Dropdown, DropdownButton , ButtonGroup } from 'react-bootstrap';
 import {  Modal , InputGroup } from 'react-bootstrap';
 import { Sentence , SentenceContext } from './Sentence';
 import { VertexProvider , VertexContext , VertexCreate } from './Vertex'
-import { MyModalInput } from './MyModalView'
+import { MyModalInput , MyModalYesNo } from './MyModalView'
 
 import * as util from './Util.js';
-
-const isValueInfo = (val) => { return val.match(/^[_].+/) }
 
 // ノードツリー
 const VertexTree = (props) => {
@@ -33,8 +31,8 @@ const VertexTree = (props) => {
     const VertexModalEdit = () => {
         const isDlgEdit = () => { return dlg == 1 ? true : false }
         const resetDlgEdit = () => {setDlg(0)}
-        const okDlgEdit = (arg) => {
-            vc.mergeupdate( vc.crnt , arg ) 
+        const okDlgEdit = (ev,arg) => {
+            vc.update(ev , props.present , arg) 
             setDlg(0) 
         }
         return (
@@ -42,6 +40,23 @@ const VertexTree = (props) => {
                 caption ="edit" label="label"                        
                 no="close" yes="OK"
                 nofunc={resetDlgEdit} yesfunc={okDlgEdit}
+            />
+        )
+    }
+
+    // delete menu
+    const VertexModalDelete = () => {
+        const isDlgDelete = () => { return dlg == 2  ? true : false }
+        const resetDlgDelete = () => {setDlg(0)}
+        const okDlgDelete = (ev) => {
+            vc.vanish(ev , props.present) 
+            setDlg(0) 
+        }
+        return (
+            <MyModalYesNo show={isDlgDelete} onHide={resetDlgDelete}
+                caption ="delete" label="label"                        
+                no="close" yes="OK"
+                nofunc={resetDlgDelete} yesfunc={okDlgDelete}
             />
         )
     }
@@ -54,7 +69,7 @@ const VertexTree = (props) => {
                 <ButtonGroup>
                     <DropdownButton variant="secondary" size="sm" id="dropdown-item-button" title="" drop="left" >
                         <Dropdown.Item as="button" onSelect={()=> setDlg(1) } >Edit</Dropdown.Item>
-                        <Dropdown.Item as="button">Delete</Dropdown.Item>
+                        <Dropdown.Item as="button" onSelect={()=> setDlg(2) } >Delete</Dropdown.Item>
                         <Dropdown.Item as="button">Cleate</Dropdown.Item>
                     </DropdownButton>
                 </ButtonGroup>
@@ -64,17 +79,17 @@ const VertexTree = (props) => {
 
     const VertexDisp = () => {
         //       console.log( props.vtx.get() )
+        const onclick = () => vc.setcrnt(props.present)
+        let crnt = vc.crnt == props.present ? true : false
         return (
             <ListGroup.Item
-                action onClick={vc.setcrnt}
-                active = {vc.crnt == props.present ? true : false }
+                action onClick={onclick}
+                active = {crnt} 
             >
                 {'---'.repeat(depth)}
-                {data['name']}
-                {/*
-                {list.length >=1 && <VertexCollpaseButton />}
-                */}
-                <VetexDropDown />
+                {data['name']}　{props.present}
+                {data['children'].length >=1 && <VertexCollpaseButton />}
+                {crnt ? <VetexDropDown /> : "" }
             </ListGroup.Item>
         )
     }
@@ -91,9 +106,9 @@ const VertexTree = (props) => {
                 })
             }
             <VertexModalEdit />
+            <VertexModalDelete />
         </div>
     )
-
 }
 
 

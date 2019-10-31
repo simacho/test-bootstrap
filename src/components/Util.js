@@ -29,4 +29,6 @@ ${d.getMinutes().toString().padStart(2, '0')}
 export function isObject(o) {
       return (o instanceof Object && !(o instanceof Array)) ? true : false;
 };
+
+const isValueInfo = (val) => { return val.match(/^[_].+/) }
  

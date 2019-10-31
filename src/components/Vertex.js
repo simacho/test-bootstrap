@@ -97,15 +97,33 @@ const VertexProvider = ({children}) => {
             let crf = firestoreDb.collection('vertices')
             let rf = crf.doc(vid) 
             let dc = rf.get().then(doc => {
-                if ( doc.exist ){
-                    // 親のノードから削除する
-                    let prf = crf.doc(doc.data().parent)
-                    prf.update({
-                        children: admin.firestore.FieldValue.arrayRemove(vid)
-                    })
-                    // 子供の親ノードを変更する
+                console.log( 'vtx delete 2 ' , doc)
+                if ( doc.exists ){
+                    let pvt = vtx[vid].parent;
+                    let prf = crf.doc(vtx[vid].parent)
+
+                    if (pvt != null ){
+                        // 親のノードから削除
+                        console.log("prf " , prf , " pvt " , pvt )
+                        console.log( admin.firestore.FieldValue.arrayRemove(vid) )
+
+                        prf.update({
+                            children: admin.firestore.FieldValue.arrayRemove(vid)
+                        })
+                        vtx[pvt].children = vtx[pvt].children.filter( n => n !== vid)
+                        console.log( 'vtx delete 333 ')
+                    }
+                    // 子供のノードの削除
                     doc.data().children.map((child) => {
+                        if ( pvt != null ){
+                            prf.update({
+                                children: admin.firestore.FieldValue.arrayUnion(child)
+                            })
+                        }
                         crf.doc(child).update({parent: doc.data().parent})
+
+                        vtx[pvt].children.push( child )
+                        vtx[child].parent = pvt
                     })
                 }
             })
@@ -120,19 +138,17 @@ const VertexProvider = ({children}) => {
     //
 
     // ノード情報の変更
-    const mergeupdate = (ev:InputEvent , address , name) => { 
+    const update = (ev:InputEvent , vid , name) => { 
         try {
-            firestoreDb.collection('vertices').doc(address).set({
-                name: name
-            },{merge: true}).then( ref => { console.log( 'Merge doc ', ref.id) } );
-
+            let crf = firestoreDb.collection('vertices')
+            let rf = crf.doc(vid).update({name: name})
+            vtx[vid].name = name
             return ev.preventDefault();
         } catch (e) {
             console.log("error occured")
             return ev.preventDefault();
         }
     }
-
 
     // ノード情報の読み込み
     const load = useCallback(async (address,filter) => {
@@ -155,15 +171,23 @@ const VertexProvider = ({children}) => {
         }
     }, [])
 
+    // カレント設定
+    const setcrnt = (id) => {
+        setCrnt( id )
+        console.log(id)
+    }
+
     return (
         <VertexContext.Provider
             value={{
                 create,
                 create_byname,
-                mergeupdate,
+                update,
+                vanish,
                 load,
                 vtx,
                 crnt,
+                setcrnt,
                 loading,
                 root,
             }}

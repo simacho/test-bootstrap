@@ -6,25 +6,25 @@
     "bootstrap": "^4.3.1",
     "bootstrap-less": "^3.3.8",
     "dns": "^0.2.2",
-    "firebase": "^5.8.2",
-    "firebase-admin": "^8.6.0",
-    "firebaseui": "^3.5.2",
-    "google-map-react": "^1.1.4",
+    "firebase": "^5.11.1",
+    "firebase-admin": "^8.6.1",
+    "firebaseui": "^3.6.1",
+    "google-map-react": "^1.1.5",
     "http2": "^3.3.7",
-    "jquery": "^3.3.1",
-    "react": "^16.8.6",
-    "react-bootstrap": "^1.0.0-beta.5",
-    "react-dom": "^16.8.6",
+    "jquery": "^3.4.1",
+    "react": "^16.10.2",
+    "react-bootstrap": "^1.0.0-beta.14",
+    "react-dom": "^16.10.2",
     "react-github-fork-ribbon": "^0.6.0",
     "react-google-map": "^3.1.1",
-    "react-google-maps-loader": "^4.2.5",
+    "react-google-maps-loader": "^4.2.6",
     "react-js-pagination": "^3.0.2",
     "react-paginate": "^6.3.0",
     "react-redux": "^6.0.0",
-    "react-router": "^5.0.0",
-    "react-router-dom": "^5.0.0",
+    "react-router": "^5.1.2",
+    "react-router-dom": "^5.1.2",
     "react-scripts": "2.1.3",
-    "redux": "^4.0.1"
+    "redux": "^4.0.4"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -42,7 +42,7 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "eslint-plugin-react-hooks": "^1.6.0",
-    "gulp": "^4.0.0"
+    "eslint-plugin-react-hooks": "^1.7.0",
+    "gulp": "^4.0.2"
   }
 }
