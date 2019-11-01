@@ -4,7 +4,6 @@ import { Button , Alert , Badge , Form , ListGroup } from 'react-bootstrap';
 import firebase from 'firebase';
 import firebaseui from 'firebaseui';
 import { firebaseDb , firestoreDb } from '../firebase/index.js'
-import * as admin from 'firebase-admin';
 import { Sentence , SentenceContext } from './Sentence';
 import * as util from './Util.js';
 import { SntForm , SntView } from './SntView'
@@ -97,27 +96,22 @@ const VertexProvider = ({children}) => {
             let crf = firestoreDb.collection('vertices')
             let rf = crf.doc(vid) 
             let dc = rf.get().then(doc => {
-                console.log( 'vtx delete 2 ' , doc)
                 if ( doc.exists ){
                     let pvt = vtx[vid].parent;
                     let prf = crf.doc(vtx[vid].parent)
 
                     if (pvt != null ){
                         // 親のノードから削除
-                        console.log("prf " , prf , " pvt " , pvt )
-                        console.log( admin.firestore.FieldValue.arrayRemove(vid) )
-
                         prf.update({
-                            children: admin.firestore.FieldValue.arrayRemove(vid)
+                            children: firebase.firestore.FieldValue.arrayRemove(vid)
                         })
                         vtx[pvt].children = vtx[pvt].children.filter( n => n !== vid)
-                        console.log( 'vtx delete 333 ')
                     }
                     // 子供のノードの削除
                     doc.data().children.map((child) => {
                         if ( pvt != null ){
                             prf.update({
-                                children: admin.firestore.FieldValue.arrayUnion(child)
+                                children: firebase.firestore.FieldValue.arrayUnion(child)
                             })
                         }
                         crf.doc(child).update({parent: doc.data().parent})
@@ -125,6 +119,40 @@ const VertexProvider = ({children}) => {
                         vtx[pvt].children.push( child )
                         vtx[child].parent = pvt
                     })
+                }
+            })
+            // rf.delete();
+            return ev.preventDefault();
+        } catch (e) {
+            console.log("error occured")
+            return ev.preventDefault();
+        }
+    }
+
+    // 移動 
+    const move = (ev:InputEvent , vid , tid) => { 
+        console.log( 'vtx move ', vid , " to " ,tid )
+        try {
+            let crf = firestoreDb.collection('vertices')
+            let rf = crf.doc(vid) 
+            let trf = crf.doc(tid)
+            let dc = rf.get().then(doc => {
+                if ( doc.exists ){
+                    let pvt = vtx[vid].parent;
+                    let prf = crf.doc(vtx[vid].parent)
+
+                    if (pvt != null ){
+                        // 親のノードから削除
+                        prf.update({
+                            children: firebase.firestore.FieldValue.arrayRemove(vid)
+                        })
+                        vtx[pvt].children = vtx[pvt].children.filter( n => n !== vid)
+                    }
+                    // 移動先に接続
+                    rf.update( { parent: tid })
+                    vtx[vid].parent = tid
+                    trf.update( { children: firebase.firestore.FieldValue.arrayUnion(vid) })
+                    vtx[tid].children.push(vid)
                 }
             })
             // rf.delete();
