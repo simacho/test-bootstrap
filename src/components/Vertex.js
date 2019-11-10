@@ -54,11 +54,11 @@ const VertexProvider = ({children}) => {
     const [ loading , setLoading ] = useState( true )
 
     // 作成する
-    const create = (ev:InputEvent , pid , name ) => { 
+    const create = async (ev:InputEvent , pid , name ) => { 
         console.log( 'vtx create ' + pid + ' ' + name )
         try {
             let clref = firestoreDb.collection('vertices')
-            clref.doc(pid).get().then( pdoc => {
+            await clref.doc(pid).get().then( pdoc => {
                 clref.add({
                     name: name,
                     children: [],
@@ -69,6 +69,8 @@ const VertexProvider = ({children}) => {
                     pdoc.ref.update({children: children})
                 })
             })
+
+
             return ev.preventDefault();
         } catch (e) {
             console.log("error occured")
@@ -105,7 +107,6 @@ const VertexProvider = ({children}) => {
                         prf.update({
                             children: firebase.firestore.FieldValue.arrayRemove(vid)
                         })
-                        vtx[pvt].children = vtx[pvt].children.filter( n => n !== vid)
                     }
                     // 子供のノードの削除
                     doc.data().children.map((child) => {
@@ -115,9 +116,6 @@ const VertexProvider = ({children}) => {
                             })
                         }
                         crf.doc(child).update({parent: doc.data().parent})
-
-                        vtx[pvt].children.push( child )
-                        vtx[child].parent = pvt
                     })
                 }
             })
@@ -146,13 +144,10 @@ const VertexProvider = ({children}) => {
                         prf.update({
                             children: firebase.firestore.FieldValue.arrayRemove(vid)
                         })
-                        vtx[pvt].children = vtx[pvt].children.filter( n => n !== vid)
                     }
                     // 移動先に接続
                     rf.update( { parent: tid })
-                    vtx[vid].parent = tid
                     trf.update( { children: firebase.firestore.FieldValue.arrayUnion(vid) })
-                    vtx[tid].children.push(vid)
                 }
             })
             // rf.delete();
@@ -163,7 +158,19 @@ const VertexProvider = ({children}) => {
         }
     }
 
-    //
+    // 検索
+    const search = async ( name ) => {
+        let query = firestoreDb.collection('vertices').where('name','==', name ) 
+        let ret = null
+
+        if ( query == null ) return ret 
+        await query.get().then((snp)=>{
+            if (snp.size > 0){
+                ret = snp.docs[0].ref.id
+            }
+        })
+        return ret
+    }
 
     // ノード情報の変更
     const update = (ev:InputEvent , vid , name) => { 
@@ -175,6 +182,27 @@ const VertexProvider = ({children}) => {
         } catch (e) {
             console.log("error occured")
             return ev.preventDefault();
+        }
+    }
+
+    // ノード情報の更新
+    const reload = async (ev:InputEvent) => {
+        try {
+            let datahash = {} 
+            let childlist = []
+            let dcref = await firestoreDb.collection('vertices').get().then((snapshot)=>{
+                snapshot.forEach((doc) => {
+                    datahash[doc.ref.id] = doc.data()
+                   if ( "parent" in doc.data() && doc.data().parent == null ) setRoot( doc.ref.id )
+                })
+                console.log('firestore reloaded 0')
+            })
+            console.log( 'firestore reloaded 1 ' , datahash , root )
+            setVtx( datahash )
+            // return ev.preventDefault()
+        } catch (e) {
+            console.error(e.code, e.message)
+            return ev.preventDefault()
         }
     }
 
@@ -192,8 +220,8 @@ const VertexProvider = ({children}) => {
                 })
             })
             setVtx( datahash )
-            setLoading(false)
             console.log( 'firestore loaded ' , datahash , root )
+            setLoading(false)
         } catch (e) {
             console.error(e.code, e.message)
         }
@@ -212,7 +240,10 @@ const VertexProvider = ({children}) => {
                 create_byname,
                 update,
                 vanish,
+                search,
+                move,
                 load,
+                reload,
                 vtx,
                 crnt,
                 setcrnt,

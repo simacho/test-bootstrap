@@ -50,6 +50,7 @@ const VertexTree = (props) => {
         const resetDlgDelete = () => {setDlg(0)}
         const okDlgDelete = (ev) => {
             vc.vanish(ev , props.present) 
+            vc.reload(ev)
             setDlg(0) 
         }
         return (
@@ -61,16 +62,56 @@ const VertexTree = (props) => {
         )
     }
 
+    // move menu
+    const VertexModalMove= () => {
+        const isDlgMove= () => { return dlg == 3 ? true : false }
+        const resetDlgMove= () => {setDlg(0)}
+        const okDlgMove= (ev,arg) => {
+            vc.search( arg ).then( (result) => {
+                vc.move(ev , props.present , result ) 
+                vc.reload(ev)
+                setDlg(0) 
+            }
+            )
+        }
+        return (
+            <MyModalInput show={isDlgMove} onHide={resetDlgMove}
+                caption ="move" label="label"                        
+                no="close" yes="OK"
+                nofunc={resetDlgMove} yesfunc={okDlgMove}
+            />
+        )
+    }
+
+    // create menu
+    const VertexModalCreate= () => {
+        const isDlgCreate= () => { return dlg == 4 ? true : false }
+        const resetDlgCreate= () => {setDlg(0)}
+        const okDlgCreate= (ev,arg) => {
+            vc.create(ev , props.present , arg ) 
+            vc.reload(ev)
+            setDlg(0) 
+        }
+        return (
+            <MyModalInput show={isDlgCreate} onHide={resetDlgCreate}
+                caption ="Create" label="label"                        
+                no="close" yes="OK"
+                nofunc={resetDlgCreate} yesfunc={okDlgCreate}
+            />
+        )
+    }
+
 
     // ドロップダウンメニュー
     const VetexDropDown = () => {
         return (
             <div class="float-right">
                 <ButtonGroup>
-                    <DropdownButton variant="secondary" size="sm" id="dropdown-item-button" title="" drop="left" >
+                    <DropdownButton size="sm" variant="secondary" id="dropdown-item-button" title="" drop="left" >
                         <Dropdown.Item as="button" onSelect={()=> setDlg(1) } >Edit</Dropdown.Item>
                         <Dropdown.Item as="button" onSelect={()=> setDlg(2) } >Delete</Dropdown.Item>
-                        <Dropdown.Item as="button">Cleate</Dropdown.Item>
+                        <Dropdown.Item as="button" onSelect={()=> setDlg(3) } >Move</Dropdown.Item>
+                        <Dropdown.Item as="button" onSelect={()=> setDlg(4) } >Create</Dropdown.Item>
                     </DropdownButton>
                 </ButtonGroup>
             </div>
@@ -107,6 +148,8 @@ const VertexTree = (props) => {
             }
             <VertexModalEdit />
             <VertexModalDelete />
+            <VertexModalMove />
+            <VertexModalCreate />
         </div>
     )
 }
@@ -118,12 +161,12 @@ export const VertexView = (props) => {
     // ノード情報の読み込み
     useEffect(() => {
         vc.load(address)
+        console.log( "effect loaded")
     },[] )
 
     if (vc.vtx == null ) return "Vertex ReadErr";
     if (vc.loading == true) return "";
 
-    console.log( vc.root )
 
     return (
         <div>
