@@ -9,7 +9,7 @@ import * as util from './Util.js';
 //
 export const MyModalInput = (props) => {
     const [ txt , setTxt ] = useState("")
-    const onclick = (e) => props.yesfunc(e,txt)
+    const onclick = useEffect( (e) => props.yesfunc(e,txt) , [])
 
     return (
         <Modal show={props.show()} onHide ={props.onHide}>

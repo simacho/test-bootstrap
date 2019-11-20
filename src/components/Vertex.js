@@ -173,15 +173,13 @@ const VertexProvider = ({children}) => {
     }
 
     // ノード情報の変更
-    const update = (ev:InputEvent , vid , name) => { 
+    const update = (vid , name) => { 
         try {
             let crf = firestoreDb.collection('vertices')
             let rf = crf.doc(vid).update({name: name})
             vtx[vid].name = name
-            return ev.preventDefault();
         } catch (e) {
             console.log("error occured")
-            return ev.preventDefault();
         }
     }
 
