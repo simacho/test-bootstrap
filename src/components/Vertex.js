@@ -52,6 +52,7 @@ const VertexProvider = ({children}) => {
     const [ root , setRoot ] = useState( null )
     const [ crnt , setCrnt ] = useState( "" )
     const [ loading , setLoading ] = useState( true )
+    const [ reload , setReload ] = useState( false )
 
     // 作成する
     const create = async (ev:InputEvent , pid , name ) => { 
@@ -69,8 +70,7 @@ const VertexProvider = ({children}) => {
                     pdoc.ref.update({children: children})
                 })
             })
-
-
+            setReload( true )
             return ev.preventDefault();
         } catch (e) {
             console.log("error occured")
@@ -120,6 +120,7 @@ const VertexProvider = ({children}) => {
                 }
             })
             // rf.delete();
+            setReload( true )
             return ev.preventDefault();
         } catch (e) {
             console.log("error occured")
@@ -151,6 +152,7 @@ const VertexProvider = ({children}) => {
                 }
             })
             // rf.delete();
+            setReload( true )
             return ev.preventDefault();
         } catch (e) {
             console.log("error occured")
@@ -183,26 +185,6 @@ const VertexProvider = ({children}) => {
         }
     }
 
-    // ノード情報の更新
-    const reload = async (ev:InputEvent) => {
-        try {
-            let datahash = {} 
-            let childlist = []
-            let dcref = await firestoreDb.collection('vertices').get().then((snapshot)=>{
-                snapshot.forEach((doc) => {
-                    datahash[doc.ref.id] = doc.data()
-                   if ( "parent" in doc.data() && doc.data().parent == null ) setRoot( doc.ref.id )
-                })
-                console.log('firestore reloaded 0')
-            })
-            console.log( 'firestore reloaded 1 ' , datahash , root )
-            setVtx( datahash )
-            // return ev.preventDefault()
-        } catch (e) {
-            console.error(e.code, e.message)
-            return ev.preventDefault()
-        }
-    }
 
     // ノード情報の読み込み
     const load = useCallback(async (address,filter) => {
@@ -223,7 +205,7 @@ const VertexProvider = ({children}) => {
         } catch (e) {
             console.error(e.code, e.message)
         }
-    }, [])
+    }, [reload])
 
     // カレント設定
     const setcrnt = (id) => {
