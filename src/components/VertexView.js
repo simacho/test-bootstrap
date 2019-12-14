@@ -32,7 +32,7 @@ const VertexTree = (props) => {
         const isDlgEdit = () => { return dlg == 1 ? true : false }
         const resetDlgEdit = () => {setDlg(0)}
         const okDlgEdit = (ev,arg) => {
-            vc.update(ev , props.present , arg) 
+            vc.update( props.present , arg) 
             setDlg(0) 
         }
         return (
@@ -49,8 +49,7 @@ const VertexTree = (props) => {
         const isDlgDelete = () => { return dlg == 2  ? true : false }
         const resetDlgDelete = () => {setDlg(0)}
         const okDlgDelete = (ev) => {
-            vc.vanish(ev , props.present) 
-            vc.reload(ev)
+            vc.vanish( props.present) 
             setDlg(0) 
         }
         return (
@@ -68,8 +67,7 @@ const VertexTree = (props) => {
         const resetDlgMove= () => {setDlg(0)}
         const okDlgMove= (ev,arg) => {
             vc.search( arg ).then( (result) => {
-                vc.move(ev , props.present , result ) 
-                vc.reload(ev)
+                vc.move( props.present , result ) 
                 setDlg(0) 
             }
             )
@@ -88,8 +86,7 @@ const VertexTree = (props) => {
         const isDlgCreate= () => { return dlg == 4 ? true : false }
         const resetDlgCreate= () => {setDlg(0)}
         const okDlgCreate= (ev,arg) => {
-            vc.create(ev , props.present , arg ) 
-            vc.reload(ev)
+            vc.create( props.present , arg ) 
             setDlg(0) 
         }
         return (
@@ -101,22 +98,75 @@ const VertexTree = (props) => {
         )
     }
 
+    // カスタムトグル
+    const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
+        <a
+            href=""
+            ref={ref}
+            onClick={e => {
+                e.preventDefault();
+                onClick(e);
+            }}
+        >
+            <span class="text-white">
+                {children}
+                &#x25bc;
+            </span>
+        </a>
+    ));
 
     // ドロップダウンメニュー
-    const VetexDropDown = () => {
+    const VertexDropDown = () => {
         return (
-            <div class="float-right">
-                <ButtonGroup>
-                    <DropdownButton size="sm" variant="secondary" id="dropdown-item-button" title="" drop="left" >
+            <div class="float-right" >
+                <Dropdown>
+                    <Dropdown.Toggle as={CustomToggle} id="dropdown-custom-components" drop="up" key="up">
+                    </Dropdown.Toggle>
+
+
+                    <Dropdown.Menu className="super-colors ">
                         <Dropdown.Item as="button" onSelect={()=> setDlg(1) } >Edit</Dropdown.Item>
                         <Dropdown.Item as="button" onSelect={()=> setDlg(2) } >Delete</Dropdown.Item>
                         <Dropdown.Item as="button" onSelect={()=> setDlg(3) } >Move</Dropdown.Item>
                         <Dropdown.Item as="button" onSelect={()=> setDlg(4) } >Create</Dropdown.Item>
-                    </DropdownButton>
-                </ButtonGroup>
+
+                    </Dropdown.Menu>
+                </Dropdown>
             </div>
         )
     }
+
+
+	// forwardRef again here!
+	// Dropdown needs access to the DOM of the Menu to measure it
+	const CustomMenu = React.forwardRef(
+		({ children, style, className, 'aria-labelledby': labeledBy }, ref) => {
+			const [value, setValue] = useState('');
+
+			return (
+				<div
+					ref={ref}
+					style={style}
+					className={className}
+					aria-labelledby={labeledBy}
+				>
+					<FormControl
+						autoFocus
+						className="mx-3 my-2 w-auto"
+						placeholder="Type to filter..."
+						onChange={e => setValue(e.target.value)}
+						value={value}
+					/>
+					<ul className="list-unstyled">
+						{React.Children.toArray(children).filter(
+							child =>
+							!value || child.props.children.toLowerCase().startsWith(value),
+						)}
+					</ul>
+				</div>
+			);
+		},
+	);
 
     const VertexDisp = () => {
         //       console.log( props.vtx.get() )
@@ -130,7 +180,7 @@ const VertexTree = (props) => {
                 {'---'.repeat(depth)}
                 {data['name']}　{props.present}
                 {data['children'].length >=1 && <VertexCollpaseButton />}
-                {crnt ? <VetexDropDown /> : "" }
+                {crnt ? <VertexDropDown /> : "" }
             </ListGroup.Item>
         )
     }
@@ -161,8 +211,8 @@ export const VertexView = (props) => {
     // ノード情報の読み込み
     useEffect(() => {
         vc.load(address)
-        console.log( "effect loaded")
-    },[] )
+        console.log( "vertex loaded")
+    },[vc.reload] )
 
     if (vc.vtx == null ) return "Vertex ReadErr";
     if (vc.loading == true) return "";

@@ -8,10 +8,10 @@ import { Sentence , SentenceContext } from './Sentence';
 import * as util from './Util.js';
 import { SntForm , SntView } from './SntView'
 
-const VertexContext = createContext()
+const LeafContext = createContext()
 
-const VertexCreate = (props) => {
-    const vtx = useContext(VertexContext)
+const LeafCreate = (props) => {
+    const vtx = useContext(LeafContext)
     const [ name , setName ] = useState( "" )
     const [ address , setAddress ] = useState( "" )
 
@@ -46,7 +46,7 @@ const VertexCreate = (props) => {
 }
 
 
-const VertexProvider = ({children}) => {
+const LeafProvider = ({children}) => {
     const [ address , setAddress ] = useState( "" )
     const [ vtx , setVtx ] = useState( {} )
     const [ root , setRoot ] = useState( null )
@@ -55,20 +55,21 @@ const VertexProvider = ({children}) => {
     const [ reload , setReload ] = useState( false )
 
     // 作成する
-    const create = async (pid , name ) => { 
-        console.log( 'vtx create ' + pid + ' ' + name )
+    const create = async ( pid , name ) => { 
+        console.log( 'leaf create ' + pid + ' ' + name )
         try {
-            let clref = firestoreDb.collection('vertices')
-            await clref.doc(pid).get().then( pdoc => {
+            let clref = firestoreDb.collection('leafs')
+            await clref.doc(name).set( {
                 clref.add({
                     name: name,
-                    children: [],
-                    parent: pid 
+                    time: "",
+                    parent : pid,
+                    raw: "",
+                    view: ""
                 }).then( ref => {
-                    let children = pdoc.get('children')
-                    children.push(ref.id)
-                    pdoc.ref.update({children: children})
+                    console.log( "leaf add " + ref)
                 })
+
             })
             setReload( true )
         } catch (e) {
@@ -76,24 +77,12 @@ const VertexProvider = ({children}) => {
         }
     }
 
-    // 名前で作成する
-    const create_byname = ( pname , name ) => {
-        let query= firestoreDb.collection('vertices').where('name','==', pname ) 
-        if ( query!= null ) {
-            query.get().then((snp)=>{
-                if (snp.size > 0){
-                    create( snp.docs[0].ref.id , name )
-                }
-            })
-        }
-     }
-
     // 削除する 
-    const vanish = ( vid ) => { 
-        console.log( 'vtx delete' + vid )
+    const vanish = ( id ) => { 
+        console.log( 'leaf delete' + id )
         try {
-            let crf = firestoreDb.collection('vertices')
-            let rf = crf.doc(vid) 
+            let crf = firestoreDb.collection('leafs')
+            let rf = crf.doc(id) 
             let dc = rf.get().then(doc => {
                 if ( doc.exists ){
                     let pvt = vtx[vid].parent;
@@ -207,7 +196,7 @@ const VertexProvider = ({children}) => {
     }
 
     return (
-        <VertexContext.Provider
+        <LeafContext.Provider
             value={{
                 create,
                 create_byname,
@@ -225,11 +214,11 @@ const VertexProvider = ({children}) => {
             }}
         >
             {children}
-        </VertexContext.Provider>
+        </LeafContext.Provider>
     )
 }
 
 
-export {  VertexContext , VertexProvider , VertexCreate }
+export {  LeafContext , LeafProvider , LeafCreate }
 
 

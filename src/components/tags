@@ -1,0 +1,111 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+BbsCreate	BbsThread.js	/^export const BbsCreate = (props) => {$/;"	E
+BbsMessage	BbsMessage.js	/^export const BbsMessage = (props) => {$/;"	E
+BbsMessageTop	BbsMessage.js	/^export const BbsMessageTop = (props) => {$/;"	E
+BbsThread	BbsThread.js	/^export const BbsThread = () => {$/;"	E
+BbsThreadTop	BbsThread.js	/^export const BbsThreadTop = (props) => {$/;"	E
+CheckedTable	CheckedList.js	/^class CheckedTable extends React.Component {$/;"	C
+Datelong2Format	Util.js	/^export let Datelong2Format = (lv) => {$/;"	E
+HelloReact	BbsThread.js	/^function HelloReact() {$/;"	F
+HogeHogeTest	ReactHooksTest.js	/^export const HogeHogeTest = (props) => {$/;"	E
+LoginPage2	LoginPage.js	/^export const LoginPage2 = ()=> {$/;"	E
+MessageCreate	BbsMessage.js	/^export const MessageCreate = (props) => {$/;"	E
+MyPageDisplayInfo	MyPage.js	/^export let MyPageDisplayInfo = () => {$/;"	E
+NewLineToBr	Util.js	/^export function NewLineToBr({children = ""}){$/;"	E
+Router	BbsThread.js	/^import { BrowserRouter as Router, Route, Switch  } from 'react-router-dom';$/;"	I
+SntForm	SntView.js	/^export const SntForm = (props) => {$/;"	E
+SntView	SntView.js	/^export const SntView = (props) => {$/;"	E
+UserTable	UserList.js	/^class UserTable extends React.Component {$/;"	C
+VertexRoot	VertexTree.js	/^export const VertexRoot = (props) => {$/;"	E
+VertexView	VertexView.js	/^export const VertexView = (props) => {$/;"	E
+address	BbsMessage.js	/^        var address = 'msg\/' + props.address;$/;"	V
+address	BbsMessage.js	/^    var address = 'msg\/' + props.address;$/;"	V
+address	BbsThread.js	/^    let address = "\/bbsmessage\/" + props.hashkey;$/;"	V
+address	Sentence.js	/^    var address = 'sentence\/'$/;"	V
+callbacks	Auth.js	/^            callbacks: {$/;"	P
+callbacks	LoginPage.js	/^            callbacks: {$/;"	P
+comment	ShopInfo.js	/^            comment: "",$/;"	P
+comment	TopNavbar.js	/^            comment: "",$/;"	P
+componentDidMount	LoginPage.js	/^    componentDidMount() {$/;"	M
+componentWillMount	CheckedList.js	/^    componentWillMount(){$/;"	M
+componentWillMount	CustomInfo.js	/^    componentWillMount(){$/;"	M
+componentWillMount	ShopInfo.js	/^    componentWillMount(){$/;"	M
+componentWillMount	UserList.js	/^    componentWillMount(){$/;"	M
+constructor	CheckIn.js	/^    constructor(props) {$/;"	M
+constructor	CheckedList.js	/^    constructor(props) {$/;"	M
+constructor	CustomInfo.js	/^    constructor(props) {$/;"	M
+constructor	ShopInfo.js	/^    constructor(props) {$/;"	M
+constructor	TopNavbar.js	/^    constructor(props) {$/;"	M
+constructor	UserList.js	/^    constructor(props) {$/;"	M
+create	Sentence.js	/^    const create = (ev:InputEvent , name , msg , address ) => { $/;"	F
+create	Vertex.js	/^    const create = (ev:InputEvent , address , name) => { $/;"	F
+createThread	BbsThread.js	/^    const createThread = () => {$/;"	F
+d	Util.js	/^    var d = new Date(lv);$/;"	V
+email	CheckIn.js	/^            email: "",$/;"	P
+filt	CheckedList.js	/^        let filt;$/;"	V
+hide	ReactHooksTest.js	/^		hide = () => setIsShown(false),$/;"	M
+isObject	Util.js	/^export function isObject(o) {$/;"	E
+isValueInfo	VertexView.js	/^const isValueInfo = (val) => { return val.match(\/[_].+\/) }$/;"	F
+length	CheckedList.js	/^                length: length ,$/;"	P
+list	VertexView.js	/^    var list = Object.keys(props.vtx).filter( x => util.isObject(props.vtx[x]))$/;"	F
+list2	VertexView.js	/^    var list2 = list.filter( x => !isValueInfo(x) )$/;"	F
+load	Sentence.js	/^    const load = useCallback(async (address,filter) => {$/;"	F
+load	Vertex.js	/^    const load = useCallback(async (address,filter) => {$/;"	F
+loadCheckList	CheckedList.js	/^    loadCheckList(vhash,page){$/;"	M
+name	CheckIn.js	/^            name: "",$/;"	P
+name	ShopInfo.js	/^            name: "",$/;"	P
+name	TopNavbar.js	/^            name: "",$/;"	P
+no	CheckIn.js	/^            no: 0,$/;"	P
+onButtonClick	CheckIn.js	/^    onButtonClick(){$/;"	M
+onButtonClick	ShopInfo.js	/^    onButtonClick(){$/;"	M
+onChange	CustomInfo.js	/^    onChange(e) {$/;"	M
+onSubmit	CheckIn.js	/^    onSubmit(){$/;"	M
+onSubmit	CustomInfo.js	/^    onSubmit(event){$/;"	M
+onSubmit	ShopInfo.js	/^    onSubmit(){$/;"	M
+onTextChange	CheckIn.js	/^    onTextChange(e) {$/;"	M
+onTextChange	ShopInfo.js	/^    onTextChange(e) {$/;"	M
+render	CheckIn.js	/^    render() {$/;"	M
+render	CheckedList.js	/^    render() {$/;"	M
+render	CustomInfo.js	/^    render() {$/;"	M
+render	LoginPage.js	/^    render() {$/;"	M
+render	MyPage.js	/^    render() {$/;"	M
+render	ShopInfo.js	/^    render() {$/;"	M
+render	TopNavbar.js	/^    render() {$/;"	M
+render	UserList.js	/^    render() {$/;"	M
+sbmt	SntView.js	/^    const sbmt = (e) => {$/;"	F
+setcrnt	VertexTree.js	/^    const setcrnt = () => {$/;"	F
+show	ReactHooksTest.js	/^		show = () => setIsShown(true);$/;"	M
+signInOptions	Auth.js	/^            signInOptions: [$/;"	P
+signInOptions	LoginPage.js	/^            signInOptions: [$/;"	P
+signInSuccessWithAuthResult	Auth.js	/^                signInSuccessWithAuthResult: (authResult, redirectUrl) => {$/;"	M
+signInSuccessWithAuthResult	LoginPage.js	/^                signInSuccessWithAuthResult: (authResult, redirectUrl) => {$/;"	M
+signin	Auth.js	/^    const signin = useCallback(async (email, password) => {$/;"	F
+signout	Auth.js	/^    const signout = useCallback(async () => {$/;"	F
+signup	Auth.js	/^    const signup = useCallback(async (email, password) => {$/;"	F
+signup_ui	Auth.js	/^    const signup_ui = useCallback(async () => {$/;"	F
+someReusableHook	ReactHooksTest.js	/^someReusableHook = () => {$/;"	M
+state	CheckIn.js	/^        this.state = { $/;"	P
+state	CheckedList.js	/^        this.state = { checkin: {} , dispcheck: [] , pageCount: 1 , perPage: 10 , length: 0 , selPage:0 };$/;"	P
+state	CustomInfo.js	/^        this.state = { text: "" };$/;"	P
+state	ShopInfo.js	/^        this.state = { $/;"	P
+state	TopNavbar.js	/^        this.state = { $/;"	P
+state	UserList.js	/^        this.state = { messages: {} };$/;"	P
+status	CheckIn.js	/^            status: "",$/;"	P
+toggle	VertexTree.js	/^    const toggle = () => {$/;"	F
+uiConfig	Auth.js	/^        const uiConfig = {$/;"	O
+uiConfig	LoginPage.js	/^        const uiConfig = {$/;"	O
+uiInstance	Auth.js	/^        var uiInstance = new firebaseui.auth.AuthUI(firebase.auth()) $/;"	V
+uiShown	Auth.js	/^                uiShown: () => {$/;"	M
+uiShown	LoginPage.js	/^                uiShown: () => {$/;"	M
+update	Vertex.js	/^            var update = {}$/;"	O
+util	BbsMessage.js	/^import * as util from '.\/Util.js';$/;"	I
+util	Sentence.js	/^import * as util from '.\/Util.js';$/;"	I
+util	SntView.js	/^import * as util from '.\/Util.js';$/;"	I
+util	Vertex.js	/^import * as util from '.\/Util.js';$/;"	I
+util	VertexTree.js	/^import * as util from '.\/Util.js';$/;"	I
+util	VertexView.js	/^import * as util from '.\/Util.js';$/;"	I

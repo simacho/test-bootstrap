@@ -8,66 +8,24 @@ import { Sentence , SentenceContext } from './Sentence';
 import * as util from './Util.js';
 import { SntForm , SntView } from './SntView'
 
-const VertexContext = createContext()
-
-const VertexCreate = (props) => {
-    const vtx = useContext(VertexContext)
-    const [ name , setName ] = useState( "" )
-    const [ address , setAddress ] = useState( "" )
-
-    return (
-        <div>
-            <Form validated={true} onSubmit={(e)=>vtx.create_byname(e,address,name)} >
-                <Form.Group controlId="formDisplayName">
-                    <Form.Label>テスト</Form.Label>
-                    <Form.Control name="address" type="text"
-                        placeholder="アドレス名"
-                        required
-                        onChange={(e)=>{ setAddress( e.target.value ); console.log(e.target.value);} } />
-                    <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                    <Form.Control name="name" type="text"
-                        placeholder="新しいノードの作成"
-                        required
-                        onChange={(e)=>{ setName( e.target.value ); console.log(e.target.value);} } />
-            
-                           <Form.Control.Feedback type="invalid">
-                                             Please choose a username.
-                                                         </Form.Control.Feedback>
-
-                </Form.Group>
-                <Button variant="primary" type="submit" class="invalid-feedback" >
-                    作成する
-                </Button>
-            </Form>
-        </div>
-
-    );
-
-}
+const ArticleContext = createContext()
 
 
-const VertexProvider = ({children}) => {
-    const [ address , setAddress ] = useState( "" )
-    const [ vtx , setVtx ] = useState( {} )
-    const [ root , setRoot ] = useState( null )
-    const [ crnt , setCrnt ] = useState( "" )
+const ArticleProvider = ({children}) => {
     const [ loading , setLoading ] = useState( true )
     const [ reload , setReload ] = useState( false )
 
     // 作成する
-    const create = async (pid , name ) => { 
-        console.log( 'vtx create ' + pid + ' ' + name )
+    const create = async ( belongto , name ) => { 
+        console.log( 'articlele create ' + pid + ' ' + name )
         try {
-            let clref = firestoreDb.collection('vertices')
+            let clref = firestoreDb.collection('articles')
             await clref.doc(pid).get().then( pdoc => {
                 clref.add({
                     name: name,
-                    children: [],
-                    parent: pid 
+                    belong : [],
                 }).then( ref => {
-                    let children = pdoc.get('children')
-                    children.push(ref.id)
-                    pdoc.ref.update({children: children})
+                    // 成功時処理
                 })
             })
             setReload( true )
@@ -76,23 +34,11 @@ const VertexProvider = ({children}) => {
         }
     }
 
-    // 名前で作成する
-    const create_byname = ( pname , name ) => {
-        let query= firestoreDb.collection('vertices').where('name','==', pname ) 
-        if ( query!= null ) {
-            query.get().then((snp)=>{
-                if (snp.size > 0){
-                    create( snp.docs[0].ref.id , name )
-                }
-            })
-        }
-     }
-
     // 削除する 
     const vanish = ( vid ) => { 
         console.log( 'vtx delete' + vid )
         try {
-            let crf = firestoreDb.collection('vertices')
+            let crf = firestoreDb.collection('articles')
             let rf = crf.doc(vid) 
             let dc = rf.get().then(doc => {
                 if ( doc.exists ){
@@ -207,7 +153,7 @@ const VertexProvider = ({children}) => {
     }
 
     return (
-        <VertexContext.Provider
+        <ArticleContext.Provider
             value={{
                 create,
                 create_byname,
@@ -225,11 +171,11 @@ const VertexProvider = ({children}) => {
             }}
         >
             {children}
-        </VertexContext.Provider>
+        </ArticleContext.Provider>
     )
 }
 
 
-export {  VertexContext , VertexProvider , VertexCreate }
+export {  ArticleContext , VertexProvider , VertexCreate }
 
 

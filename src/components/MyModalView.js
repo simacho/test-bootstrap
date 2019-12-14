@@ -9,7 +9,7 @@ import * as util from './Util.js';
 //
 export const MyModalInput = (props) => {
     const [ txt , setTxt ] = useState("")
-    const onclick = (e) => props.yesfunc(e,txt)
+    const onclick = (e) => { props.yesfunc(e,txt); e.preventDefault() }
 
     return (
         <Modal show={props.show()} onHide ={props.onHide}>
@@ -34,7 +34,7 @@ export const MyModalInput = (props) => {
 // 2択ダイアログ
 //
 export const MyModalYesNo = (props) => {
-    const onclick = (e) => props.yesfunc(e)
+    const onclick = (e) => { props.yesfunc(e); e.preventDefault() }
 
     return (
         <Modal show={props.show()} onHide ={props.onHide}>
